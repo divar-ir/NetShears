@@ -4,7 +4,7 @@
 
 NetShears is a Network interceptor framework written in Swift.
 
-NetShears adds a Request interceptor mechanisms to be able to modify the HTTPRequest before being sent . This mechanism can be used to implement authentication policies, add headers to a request , add log trace or even redirect requests.
+NetShears adds a Request interceptor mechanisms to be able to modify the HTTP/HTTPS Request before being sent . This mechanism can be used to implement authentication policies, add headers to a request , add log trace or even redirect requests.
 
 
 ## Features
@@ -14,6 +14,10 @@ NetShears adds a Request interceptor mechanisms to be able to modify the HTTPReq
 - [ ] Intercept HTTP/HTTPS response body
 - [ ] View traffic logs
 - [ ] Block HTTP requets
+
+## How it works
+
+NetShears working by swizzling the URLProtocol.
 
 
 ## How to use
