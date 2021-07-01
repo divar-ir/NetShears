@@ -49,20 +49,47 @@ NetShears.shared.modify(modifier: endpointModifier)
 ```
 
 ## Installation
-NetShears can be used via the [Swift Package Manager](https://swift.org/package-manager/). 
-Just add it to the dependencies in your Package.swift file:
 
-```Swift
+### [Swift Package Manager](https://github.com/apple/swift-package-manager)
+
+Create a `Package.swift` file.
+
+```swift
+// swift-tools-version:5.0
+
+import PackageDescription
+
 let package = Package(
-    name: "MyPackage",
-    dependencies: [
-        ...
-        .package(url: "https://github.com/divar-ir/NetShears.git", from: "1.0.0"),
-    ],
-    ...
+  name: "YourProject",
+  dependencies: [
+    .package(url: "https://github.com/divar-ir/NetShears.git", from: "1.0.0"),
+  ],
+  targets: [
+    .target(name: "YourProject", dependencies: ["NetShears"])
+  ]
 )
 ```
 
+```bash
+$ swift build
+```
+
+### [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html)
+
+```ruby
+# Podfile
+use_frameworks!
+
+target 'YOUR_TARGET_NAME' do
+    pod 'NetShears'
+end
+```
+
+Replace `YOUR_TARGET_NAME` and then, in the `Podfile` directory, type:
+
+```bash
+$ pod install
+```
 
 ## Contributing
 Please see our [Contributing Guide](./CONTRIBUTING.md).
