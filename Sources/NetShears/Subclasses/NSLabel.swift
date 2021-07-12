@@ -8,7 +8,10 @@
 import UIKit
 
 final class NSLabel: UILabel {
-    @IBInspectable var padding: CGFloat = 0{
+    var borderColor : UIColor = UIColor.clear
+    var borderWidth : CGFloat = 0
+    var cornerRadius : CGFloat = 0
+    var padding: CGFloat = 0{
         didSet {
             self.textInsets = UIEdgeInsets(top: self.padding, left: self.padding, bottom: self.padding, right: self.padding)
         }
@@ -40,7 +43,7 @@ final class NSLabel: UILabel {
     
     func customize(){
         self.layer.masksToBounds = true
-        self.layer.borderColor = self.borderColor?.cgColor
+        self.layer.borderColor = self.borderColor.cgColor
         self.layer.borderWidth = self.borderWidth
         self.layer.cornerRadius = self.cornerRadius
     }
