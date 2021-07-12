@@ -149,6 +149,7 @@ Please see our [Contributing Guide](./CONTRIBUTING.md).
 ## Inspiration
 
 * [depoon/NetworkInterceptor](https://github.com/depoon/NetworkInterceptor)
+* [pmusolino/Wormholy](https://github.com/pmusolino/Wormholy)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
