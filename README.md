@@ -11,8 +11,8 @@ NetShears adds a Request interceptor mechanisms to be able to modify the HTTP/HT
 
 - [x] Intercept HTTP/HTTPS request header
 - [x] Intercept HTTP/HTTPS request endpoint
+- [x] View traffic logs
 - [ ] Intercept HTTP/HTTPS response body
-- [ ] View traffic logs
 - [ ] Block HTTP requets
 
 ## How it works
@@ -32,6 +32,9 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 
 }
 ```
+
+## Interceptor
+
 Header Modification:
 
 ```swift
@@ -46,6 +49,51 @@ Endpoint Modification:
 let endpoint = RedirectedRequestModel(originalUrl: "/register", redirectUrl: "/login")
 let endpointModifier = RequestEvaluatorModifierEndpoint(redirectedRequest: endpoint)
 NetShears.shared.modify(modifier: endpointModifier)
+```
+
+# Traffic Monitoring
+
+In order to show network traffics in your app simply call presentNetworkMonitor method and then a view will presented containing traffic logs.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/divar-ir/NetShears/master/traffic_screen.png" alt="Icon"/>
+</p>
+
+## gRPC 
+
+You can view gRPC calls by constructing the Request and Response from GRPC models:
+
+```swift
+public func addGRPC(url: String,
+                        host: String,
+                        requestObject: Data?,
+                        responseObject: Data?,
+                        success: Bool,
+                        statusCode: Int,
+                        statusMessage: String?,
+                        duration: Double?,
+                        HPACKHeadersRequest: [String: String]?,
+                        HPACKHeadersResponse: [String: String]?)
+```
+Example
+
+```swift
+// Your GRPC services that is generated from SwiftGRPC
+private let client = NoteServiceServiceClient.init(address: "127.0.0.1:12345", secure: false)
+
+
+func insertNote(note: Note, completion: @escaping(Note?, CallResult?) -> Void) {
+    _ = try? client.insert(note, completion: { (createdNote, result) in
+    
+        // Add to atlantis and show it on Proxyman app
+        NetShears.shared.addGRPC(url: "https://test.com/grpc",
+                         requestObject: try? note.jsonUTF8Data(),
+                         responseObject: try? createdNote.jsonUTF8Data(),
+                         success: result.success,
+                         statusCode: result.statusCode.rawValue,
+                         statusMessage: result.statusMessage)
+    })
+}
 ```
 
 ## Installation
