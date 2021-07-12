@@ -1,6 +1,6 @@
 //
 //  NetworkRequestInterceptor.swift
-//
+//  NetShears
 //
 //  Created by Mehdi Mirzaie on 6/4/21.
 //
@@ -20,12 +20,14 @@ import Foundation
     }
     
     public func startRecording() {
-        URLProtocol.registerClass(NetworkRequestSniffableUrlProtocol.self)
+        URLProtocol.registerClass(NetworkInterceptorUrlProtocol.self)
+        URLProtocol.registerClass(NetworkLoggerUrlProtocol.self)
         swizzleProtocolClasses()
     }
     
     public func stopRecording() {
-        URLProtocol.unregisterClass(NetworkRequestSniffableUrlProtocol.self)
+        URLProtocol.unregisterClass(NetworkInterceptorUrlProtocol.self)
+        URLProtocol.unregisterClass(NetworkLoggerUrlProtocol.self)
         swizzleProtocolClasses()
     }
 }

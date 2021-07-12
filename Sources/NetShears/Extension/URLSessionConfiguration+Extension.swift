@@ -1,6 +1,6 @@
 //
 //  URLSessionConfiguration+Extension.swift
-//  
+//  NetShears
 //
 //  Created by Mehdi Mirzaie on 6/9/21.
 //
@@ -14,9 +14,10 @@ extension URLSessionConfiguration {
             return []
         }
         var originalProtocolClasses = fakeProcotolClasses.filter {
-            return $0 != NetworkRequestSniffableUrlProtocol.self
+            return $0 != NetworkInterceptorUrlProtocol.self && $0 != NetworkLoggerUrlProtocol.self
         }
-        originalProtocolClasses.insert(NetworkRequestSniffableUrlProtocol.self, at: 0)
+        originalProtocolClasses.insert(NetworkInterceptorUrlProtocol.self, at: 0)
+        originalProtocolClasses.insert(NetworkLoggerUrlProtocol.self, at: 0)
         return originalProtocolClasses
     }
     
