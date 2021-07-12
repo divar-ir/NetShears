@@ -53,7 +53,11 @@ NetShears.shared.modify(modifier: endpointModifier)
 
 # Traffic Monitoring
 
-In order to show network traffics in your app simply call presentNetworkMonitor method and then a view will presented containing traffic logs.
+In order to show network traffics in your app simply call presentNetworkMonitor method and then a view will present containing traffic logs.
+
+```swift
+NetShears.shared.presentNetworkMonitor()
+```
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/divar-ir/NetShears/master/traffic_screen.png" alt="Icon"/>
