@@ -1,21 +1,21 @@
 //
-//  NetworkRequestSniffableUrlProtocol.swift
+//  NetworkLoggerUrlProtocol.swift
+//  NetShears
 //
-//
-//  Created by Mehdi Mirzaie on 6/4/21.
+//  Created by Mehdi Mirzaie on 6/9/21.
 //
 
 import Foundation
 
-public class NetworkRequestSniffableUrlProtocol: URLProtocol {
-    static var blacklistedHosts = [String]()
+public class NetworkLoggerUrlProtocol: URLProtocol {
 
     struct Constants {
-        static let RequestHandledKey = "NetworkRequestSniffableUrlProtocol"
+        static let RequestHandledKey = "NetworkLoggerUrlProtocol"
     }
     
     var session: URLSession?
     var sessionTask: URLSessionDataTask?
+    var currentRequest: NetShearsRequestModel?
     
     override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
         super.init(request: request, cachedResponse: cachedResponse, client: client)
@@ -26,55 +26,74 @@ public class NetworkRequestSniffableUrlProtocol: URLProtocol {
     }
     
     override public class func canInit(with request: URLRequest) -> Bool {
-        guard NetworkInterceptor.shared.shouldRequestModify(urlRequest: request) else { return false }
 
-        if NetworkRequestSniffableUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
+        if NetworkLoggerUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
             return false
         }
         return true
     }
     
-    open override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-        let mutableRequest: NSMutableURLRequest = (request as NSURLRequest).mutableCopy() as! NSMutableURLRequest
-        URLProtocol.setProperty("YES", forKey: "NetworkRequestSniffableUrlProtocol", in: mutableRequest)
-        return mutableRequest.copy() as! URLRequest
+    override public class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
     }
     
     override public func startLoading() {
-        var newRequest = request
-        for modifier in NetShears.shared.config.modifiers where modifier.isActionAllowed(urlRequest: request) {
-            modifier.modify(request: &newRequest)
-        }
-        
-        newRequest.addValue("true", forHTTPHeaderField: "Modified")
+        let newRequest = ((request as NSURLRequest).mutableCopy() as? NSMutableURLRequest)!
+        NetworkLoggerUrlProtocol.setProperty(true, forKey: Constants.RequestHandledKey, in: newRequest)
         sessionTask = session?.dataTask(with: newRequest as URLRequest)
         sessionTask?.resume()
+        
+        currentRequest = NetShearsRequestModel(request: newRequest, session: session)
+        Storage.shared.saveRequest(request: currentRequest)
     }
     
     override public func stopLoading() {
         sessionTask?.cancel()
+        currentRequest?.httpBody = body(from: request)
+        if let startDate = currentRequest?.date{
+            currentRequest?.duration = fabs(startDate.timeIntervalSinceNow) * 1000 //Find elapsed time and convert to milliseconds
+        }
+
+        Storage.shared.saveRequest(request: currentRequest)
         session?.invalidateAndCancel()
+    }
+    
+    private func body(from request: URLRequest) -> Data? {
+        /// The receiver will have either an HTTP body or an HTTP body stream only one may be set for a request.
+        /// A HTTP body stream is preserved when copying an NSURLRequest object,
+        /// but is lost when a request is archived using the NSCoding protocol.
+//        return request.httpBody ?? request.httpBodyStream?.readfully()
+        return nil
     }
     
     deinit {
         session = nil
         sessionTask = nil
+        currentRequest = nil
     }
 }
 
-extension NetworkRequestSniffableUrlProtocol: URLSessionDataDelegate {
+extension NetworkLoggerUrlProtocol: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         client?.urlProtocol(self, didLoad: data)
+        if currentRequest?.dataResponse == nil{
+            currentRequest?.dataResponse = data
+        }
+        else{
+            currentRequest?.dataResponse?.append(data)
+        }
     }
     
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         let policy = URLCache.StoragePolicy(rawValue: request.cachePolicy.rawValue) ?? .notAllowed
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: policy)
+        currentRequest?.initResponse(response: response)
         completionHandler(.allow)
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
+            currentRequest?.errorClientDescription = error.localizedDescription
             client?.urlProtocol(self, didFailWithError: error)
         } else {
             client?.urlProtocolDidFinishLoading(self)
@@ -88,6 +107,7 @@ extension NetworkRequestSniffableUrlProtocol: URLSessionDataDelegate {
     
     public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         guard let error = error else { return }
+        currentRequest?.errorClientDescription = error.localizedDescription
         client?.urlProtocol(self, didFailWithError: error)
     }
     
@@ -109,4 +129,5 @@ extension NetworkRequestSniffableUrlProtocol: URLSessionDataDelegate {
         client?.urlProtocolDidFinishLoading(self)
     }
 }
+
 

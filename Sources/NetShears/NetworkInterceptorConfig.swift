@@ -1,6 +1,6 @@
 //
 //  NetworkInterceptorConfig.swift
-// 
+//  NetShears
 //
 //  Created by Mehdi Mirzaie on 6/4/21.
 //
