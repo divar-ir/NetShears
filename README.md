@@ -88,8 +88,7 @@ private let client = NoteServiceServiceClient.init(address: "127.0.0.1:12345", s
 
 func insertNote(note: Note, completion: @escaping(Note?, CallResult?) -> Void) {
     _ = try? client.insert(note, completion: { (createdNote, result) in
-    
-        // Add to atlantis and show it on Proxyman app
+
         NetShears.shared.addGRPC(url: "https://test.com/grpc",
                          requestObject: try? note.jsonUTF8Data(),
                          responseObject: try? createdNote.jsonUTF8Data(),
