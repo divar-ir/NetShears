@@ -12,7 +12,6 @@ import UIKit
 class RequestsViewController: UIViewController, ShowLoaderProtocol {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var request: UICollectionView!
 
     private var filteredRequests: [NetShearsRequestModel] = Storage.shared.requests
     
@@ -39,7 +38,7 @@ class RequestsViewController: UIViewController, ShowLoaderProtocol {
     }
     
     private func registerNibs() {
-        collectionView?.register(UINib(nibName: String(describing: RequestCell.self), bundle: Bundle.NetShearsBundle), forCellWithReuseIdentifier: requestCellIdentifier)
+        collectionView?.register(UINib(nibName: String(describing: RequestCell.self), bundle: Bundle.module), forCellWithReuseIdentifier: requestCellIdentifier)
     }
     
     //  MARK: - Search

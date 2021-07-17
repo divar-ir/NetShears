@@ -12,7 +12,7 @@
         <!--Requests-->
         <scene sceneID="bMY-jK-aiL">
             <objects>
-                <viewController storyboardIdentifier="RequestsViewController" automaticallyAdjustsScrollViewInsets="NO" id="hrW-Yh-eEJ" customClass="RequestsViewController" customModule="Divar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RequestsViewController" automaticallyAdjustsScrollViewInsets="NO" id="hrW-Yh-eEJ" customClass="RequestsViewController" customModule="NetShears" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NrO-gO-tFr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -44,7 +44,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Requests" id="0te-N4-NBT"/>
                     <connections>
-                        <outlet property="collectionView" destination="v4V-Us-h8K" id="gOb-1m-oHE"/>
+                        <outlet property="collectionView" destination="v4V-Us-h8K" id="3Av-Rc-GCi"/>
                         <segue destination="oCq-W9-inr" kind="show" identifier="showRequestDetailVC" id="CHW-0s-7Ks"/>
                     </connections>
                 </viewController>
@@ -55,7 +55,7 @@
         <!--Request Detail View Controller-->
         <scene sceneID="JaV-AO-yRE">
             <objects>
-                <viewController storyboardIdentifier="RequestDetailViewController" automaticallyAdjustsScrollViewInsets="NO" id="oCq-W9-inr" customClass="RequestDetailViewController" customModule="Divar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RequestDetailViewController" automaticallyAdjustsScrollViewInsets="NO" id="oCq-W9-inr" customClass="RequestDetailViewController" customModule="NetShears" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dxP-Gd-tGS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -95,7 +95,7 @@
         <!--Body Detail View Controller-->
         <scene sceneID="FPQ-PL-XiD">
             <objects>
-                <viewController storyboardIdentifier="BodyDetailViewController" automaticallyAdjustsScrollViewInsets="NO" id="S40-LP-XSy" customClass="BodyDetailViewController" customModule="Divar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BodyDetailViewController" automaticallyAdjustsScrollViewInsets="NO" id="S40-LP-XSy" customClass="BodyDetailViewController" customModule="NetShears" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="k01-uv-JVw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

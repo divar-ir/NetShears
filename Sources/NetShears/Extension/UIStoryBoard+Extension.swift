@@ -9,6 +9,6 @@ import UIKit
 
 extension UIStoryboard {
     static var NetShearsStoryBoard: UIStoryboard {
-        return UIStoryboard(name: "Flow", bundle: Bundle.NetShearsBundle)
+        return UIStoryboard(name: "Flow", bundle: Bundle.module)
     }
 }
