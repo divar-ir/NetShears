@@ -29,8 +29,8 @@ extension Array where Element == RequestEvaluatorModifier {
 
     func retrieveFromDisk() -> [RequestEvaluatorModifier] {
         var modifiers = [RequestEvaluatorModifier]()
-        modifiers.append(contentsOf: PersistHelper.retrieve(RequestEvaluatorModifierHeader.storeFileName, as: [RequestEvaluatorModifierHeader].self))
-        modifiers.append(contentsOf: PersistHelper.retrieve(RequestEvaluatorModifierEndpoint.storeFileName, as: [RequestEvaluatorModifierEndpoint].self))
+        modifiers.append(contentsOf: PersistHelper.retrieve(RequestEvaluatorModifierHeader.storeFileName, as: [RequestEvaluatorModifierHeader].self) ?? [])
+        modifiers.append(contentsOf: PersistHelper.retrieve(RequestEvaluatorModifierEndpoint.storeFileName, as: [RequestEvaluatorModifierEndpoint].self) ?? [])
         return modifiers
     }
 }
