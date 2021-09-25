@@ -13,7 +13,7 @@ public final class NetShears: NSObject {
     let networkRequestInterceptor = NetworkRequestInterceptor()
     lazy var config: NetworkInterceptorConfig = {
         var savedModifiers = [RequestEvaluatorModifier]().retrieveFromDisk()
-        return NetworkInterceptorConfig(modifiers: savedModifiers)
+        return NetworkInterceptorConfig(modifiers: savedModifiers ?? [])
     }()
     
     
