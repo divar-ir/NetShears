@@ -11,7 +11,10 @@ public final class NetShears: NSObject {
     
     public static let shared = NetShears()
     let networkRequestInterceptor = NetworkRequestInterceptor()
-    var config: NetworkInterceptorConfig = NetworkInterceptorConfig(modifiers: [])
+    lazy var config: NetworkInterceptorConfig = {
+        var savedModifiers = [RequestEvaluatorModifier]().retrieveFromDisk()
+        return NetworkInterceptorConfig(modifiers: savedModifiers)
+    }()
     
     
     public func startRecording(){
