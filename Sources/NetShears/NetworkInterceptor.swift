@@ -8,20 +8,20 @@
 import Foundation
 
 
-@objc public class NetworkInterceptor: NSObject {
+@objc class NetworkInterceptor: NSObject {
     
-    @objc public static let shared = NetworkInterceptor()
+    @objc static let shared = NetworkInterceptor()
     let networkRequestInterceptor = NetworkRequestInterceptor()
     
-    public func startRecording(){
+    func startRecording(){
         self.networkRequestInterceptor.startRecording()
     }
     
-    public func stopRecording(){
+    func stopRecording(){
         self.networkRequestInterceptor.stopRecording()
     }
     
-    public func shouldRequestModify(urlRequest: URLRequest) -> Bool {
+    func shouldRequestModify(urlRequest: URLRequest) -> Bool {
         for modifer in NetShears.shared.config.modifiers {
             if modifer.isActionAllowed(urlRequest: urlRequest) {
                 return true

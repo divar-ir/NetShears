@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class NetworkInterceptorUrlProtocol: URLProtocol {
+class NetworkInterceptorUrlProtocol: URLProtocol {
     static var blacklistedHosts = [String]()
 
     struct Constants {
@@ -25,7 +25,7 @@ public class NetworkInterceptorUrlProtocol: URLProtocol {
         }
     }
     
-    override public class func canInit(with request: URLRequest) -> Bool {
+    override class func canInit(with request: URLRequest) -> Bool {
         guard NetworkInterceptor.shared.shouldRequestModify(urlRequest: request) else { return false }
 
         if NetworkInterceptorUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
@@ -40,7 +40,7 @@ public class NetworkInterceptorUrlProtocol: URLProtocol {
         return mutableRequest.copy() as! URLRequest
     }
     
-    override public func startLoading() {
+    override func startLoading() {
         var newRequest = request
         for modifier in NetShears.shared.config.modifiers where modifier.isActionAllowed(urlRequest: request) {
             modifier.modify(request: &newRequest)
@@ -51,7 +51,7 @@ public class NetworkInterceptorUrlProtocol: URLProtocol {
         sessionTask?.resume()
     }
     
-    override public func stopLoading() {
+    override func stopLoading() {
         sessionTask?.cancel()
         session?.invalidateAndCancel()
     }
@@ -63,17 +63,17 @@ public class NetworkInterceptorUrlProtocol: URLProtocol {
 }
 
 extension NetworkInterceptorUrlProtocol: URLSessionDataDelegate {
-    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         client?.urlProtocol(self, didLoad: data)
     }
     
-    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         let policy = URLCache.StoragePolicy(rawValue: request.cachePolicy.rawValue) ?? .notAllowed
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: policy)
         completionHandler(.allow)
     }
     
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
             client?.urlProtocol(self, didFailWithError: error)
         } else {
@@ -81,17 +81,17 @@ extension NetworkInterceptorUrlProtocol: URLSessionDataDelegate {
         }
     }
     
-    public func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         client?.urlProtocol(self, wasRedirectedTo: request, redirectResponse: response)
         completionHandler(request)
     }
     
-    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         guard let error = error else { return }
         client?.urlProtocol(self, didFailWithError: error)
     }
     
-    public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         let protectionSpace = challenge.protectionSpace
         let sender = challenge.sender
         
@@ -105,7 +105,7 @@ extension NetworkInterceptorUrlProtocol: URLSessionDataDelegate {
         }
     }
     
-    public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         client?.urlProtocolDidFinishLoading(self)
     }
 }

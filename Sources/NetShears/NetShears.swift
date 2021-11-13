@@ -8,7 +8,7 @@
 import UIKit
 
 public final class NetShears: NSObject {
-    
+
     public static let shared = NetShears()
     let networkRequestInterceptor = NetworkRequestInterceptor()
     lazy var config: NetworkInterceptorConfig = {

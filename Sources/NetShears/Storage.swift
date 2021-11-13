@@ -10,7 +10,7 @@ import Foundation
 
 final class Storage: NSObject {
 
-    public static let shared: Storage = Storage()
+    static let shared: Storage = Storage()
     
     var requests: [NetShearsRequestModel] = []
     

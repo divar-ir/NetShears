@@ -8,7 +8,7 @@
 import Foundation
 
 public struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equatable, Codable {
-    
+
     public var redirectedRequest: RedirectedRequestModel
 
     public static var storeFileName: String {
