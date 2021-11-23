@@ -9,13 +9,13 @@ import Foundation
 
 public struct RequestEvaluatorModifierHeader: RequestEvaluatorModifier, Equatable, Codable {
     
-    var header: HeaderModifyModel
+    public var header: HeaderModifyModel
     
     public static var storeFileName: String {
         "Header.txt"
     }
     
-    init(header: HeaderModifyModel) {
+    public init(header: HeaderModifyModel) {
         self.header = header
     }
     

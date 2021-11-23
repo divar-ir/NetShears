@@ -9,13 +9,13 @@ import Foundation
 
 public struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equatable, Codable {
     
-    var redirectedRequest: RedirectedRequestModel
+    public var redirectedRequest: RedirectedRequestModel
     
     public static var storeFileName: String {
         "Modifier.txt"
     }
     
-    init(redirectedRequest: RedirectedRequestModel) {
+    public init(redirectedRequest: RedirectedRequestModel) {
         self.redirectedRequest = redirectedRequest
     }
     
