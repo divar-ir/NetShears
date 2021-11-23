@@ -7,26 +7,26 @@
 
 import Foundation
 
-public struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equatable, Codable {
+struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equatable, Codable {
     
-    public var redirectedRequest: RedirectedRequestModel
-
-    public static var storeFileName: String {
+    var redirectedRequest: RedirectedRequestModel
+    
+    static var storeFileName: String {
         "Modifier.txt"
     }
     
-    public init(redirectedRequest: RedirectedRequestModel) {
+    init(redirectedRequest: RedirectedRequestModel) {
         self.redirectedRequest = redirectedRequest
     }
     
-    public func modify(request: inout URLRequest) {
-
+    func modify(request: inout URLRequest) {
+        
         if isRequestRedirectable(urlRequest: request) {
             request.modifyURLRequestEndpoint(redirectUrl: redirectedRequest)
         }
     }
     
-    public func isActionAllowed(urlRequest: URLRequest) -> Bool {
+    func isActionAllowed(urlRequest: URLRequest) -> Bool {
         return isRequestRedirectable(urlRequest: urlRequest)
     }
     
@@ -34,7 +34,7 @@ public struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equata
         guard let urlString = urlRequest.url?.absoluteString else {
             return false
         }
-
+        
         if urlString.contains(redirectedRequest.originalUrl) {
             return true
         }

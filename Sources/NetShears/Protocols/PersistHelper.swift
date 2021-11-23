@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class PersistHelper {
+class PersistHelper {
 
     fileprivate init() { }
 

@@ -7,27 +7,27 @@
 
 import Foundation
 
-public struct RedirectedRequestModel: Codable, Equatable {
-    public let originalUrl: String
-    public let redirectUrl: String
+struct RedirectedRequestModel: Codable, Equatable {
+    let originalUrl: String
+    let redirectUrl: String
 
-    public init (originalUrl: String, redirectUrl: String) {
+    init (originalUrl: String, redirectUrl: String) {
         self.originalUrl = originalUrl
         self.redirectUrl = redirectUrl
     }
 }
 
-public struct HeaderModifyModel: Codable, Equatable {
-    public let key: String
-    public let value: String
+struct HeaderModifyModel: Codable, Equatable {
+    let key: String
+    let value: String
 
-    public init (key: String, value: String) {
+    init (key: String, value: String) {
         self.key = key
         self.value = value
     }
 }
 
-public final class NetworkInterceptorConfig {
+final class NetworkInterceptorConfig {
     var modifiers: [RequestEvaluatorModifier] = [] {
         didSet {
             modifiers.store()

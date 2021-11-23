@@ -9,25 +9,25 @@ import UIKit
 struct Colors {
     
     struct UI{
-        static public let wordsInEvidence = UIColor(hexString: "#dadfe1")
-        static public let wordFocus = UIColor(hexString: "#f7ca18")
+        static let wordsInEvidence = UIColor(hexString: "#dadfe1")
+        static let wordFocus = UIColor(hexString: "#f7ca18")
     }
     
     struct Gray{
-        static public let darkestGray = UIColor(hexString: "#666666")
-        static public let darkerGray = UIColor(hexString: "#888888")
-        static public let darkGray = UIColor(hexString: "#999999")
-        static public let midGray = UIColor(hexString: "#BBBBBB")
-        static public let lightGray = UIColor(hexString: "#CCCCCC")
-        static public let lighestGray = UIColor(hexString: "#E7E7E7")
+        static let darkestGray = UIColor(hexString: "#666666")
+        static let darkerGray = UIColor(hexString: "#888888")
+        static let darkGray = UIColor(hexString: "#999999")
+        static let midGray = UIColor(hexString: "#BBBBBB")
+        static let lightGray = UIColor(hexString: "#CCCCCC")
+        static let lighestGray = UIColor(hexString: "#E7E7E7")
     }
     
     struct HTTPCode{
-        static public let Success = UIColor(hexString: "#297E4C") //2xx
-        static public let Redirect = UIColor(hexString: "#3D4140") //3xx
-        static public let ClientError = UIColor(hexString: "#D97853") //4xx
-        static public let ServerError = UIColor(hexString: "#D32C58") //5xx
-        static public let Generic = UIColor(hexString: "#999999") //Others
+        static let Success = UIColor(hexString: "#297E4C") //2xx
+        static let Redirect = UIColor(hexString: "#3D4140") //3xx
+        static let ClientError = UIColor(hexString: "#D97853") //4xx
+        static let ServerError = UIColor(hexString: "#D32C58") //5xx
+        static let Generic = UIColor(hexString: "#999999") //Others
     }
 }
 
