@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RequestEvaluatorModifierHeader: RequestEvaluatorModifier, Equatable, Codable {
+public struct RequestEvaluatorModifierHeader: RequestEvaluatorModifier, Equatable, Codable {
     
     var header: HeaderModifyModel
     

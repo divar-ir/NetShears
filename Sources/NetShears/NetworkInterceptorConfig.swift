@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RedirectedRequestModel: Codable, Equatable {
+public struct RedirectedRequestModel: Codable, Equatable {
     let originalUrl: String
     let redirectUrl: String
 
@@ -17,7 +17,7 @@ struct RedirectedRequestModel: Codable, Equatable {
     }
 }
 
-struct HeaderModifyModel: Codable, Equatable {
+public struct HeaderModifyModel: Codable, Equatable {
     let key: String
     let value: String
 
