@@ -12,19 +12,19 @@ public protocol RequestBroadcastDelegate: AnyObject {
 }
 
 public final class RequestBroadcast: RequestObserverProtocol {
-    static let shared = RequestBroadcast()
+    static public let shared = RequestBroadcast()
 
     var delegate = ThreadSafe<RequestBroadcastDelegate?>(nil)
 
     private init() {}
 
-    func setDelegate(_ newDelegate: RequestBroadcastDelegate) {
+    public func setDelegate(_ newDelegate: RequestBroadcastDelegate) {
         delegate.atomically { delegate in
             delegate = newDelegate
         }
     }
 
-    func removeDelegate() {
+    public func removeDelegate() {
         delegate.atomically { delegate in
             delegate = nil
         }
