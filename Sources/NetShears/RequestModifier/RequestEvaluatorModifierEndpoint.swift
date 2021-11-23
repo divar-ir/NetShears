@@ -11,7 +11,7 @@ public struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equata
     
     var redirectedRequest: RedirectedRequestModel
     
-    static var storeFileName: String {
+    public static var storeFileName: String {
         "Modifier.txt"
     }
     
@@ -19,14 +19,14 @@ public struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equata
         self.redirectedRequest = redirectedRequest
     }
     
-    func modify(request: inout URLRequest) {
+    public func modify(request: inout URLRequest) {
         
         if isRequestRedirectable(urlRequest: request) {
             request.modifyURLRequestEndpoint(redirectUrl: redirectedRequest)
         }
     }
     
-    func isActionAllowed(urlRequest: URLRequest) -> Bool {
+    public func isActionAllowed(urlRequest: URLRequest) -> Bool {
         return isRequestRedirectable(urlRequest: urlRequest)
     }
     

@@ -11,7 +11,7 @@ public struct RequestEvaluatorModifierHeader: RequestEvaluatorModifier, Equatabl
     
     var header: HeaderModifyModel
     
-    static var storeFileName: String {
+    public static var storeFileName: String {
         "Header.txt"
     }
     
@@ -19,11 +19,11 @@ public struct RequestEvaluatorModifierHeader: RequestEvaluatorModifier, Equatabl
         self.header = header
     }
     
-    func modify(request: inout URLRequest) {
+    public func modify(request: inout URLRequest) {
         request.modifyURLRequestHeader(header: header)
     }
     
-    func isActionAllowed(urlRequest: URLRequest) -> Bool {
+    public func isActionAllowed(urlRequest: URLRequest) -> Bool {
         return true
     }
 }
