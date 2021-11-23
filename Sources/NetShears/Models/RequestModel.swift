@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-final class NetShearsRequestModel: Codable {
+public final class NetShearsRequestModel: Codable {
     let id: String
     let url: String
     let host: String?

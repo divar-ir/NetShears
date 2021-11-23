@@ -16,6 +16,12 @@ public class NetworkLoggerUrlProtocol: URLProtocol {
     var session: URLSession?
     var sessionTask: URLSessionDataTask?
     var currentRequest: NetShearsRequestModel?
+    lazy var requestObserver: RequestObserverProtocol = {
+        RequestObserver(options: [
+            RequestStorage.shared,
+            RequestBroadcast.shared
+        ])
+    }()
     
     override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
         super.init(request: request, cachedResponse: cachedResponse, client: client)
@@ -44,7 +50,7 @@ public class NetworkLoggerUrlProtocol: URLProtocol {
         sessionTask?.resume()
         
         currentRequest = NetShearsRequestModel(request: newRequest, session: session)
-        Storage.shared.saveRequest(request: currentRequest)
+        requestObserver.newRequestArrived(request)
     }
     
     override public func stopLoading() {
@@ -54,7 +60,7 @@ public class NetworkLoggerUrlProtocol: URLProtocol {
             currentRequest?.duration = fabs(startDate.timeIntervalSinceNow) * 1000 //Find elapsed time and convert to milliseconds
         }
 
-        Storage.shared.saveRequest(request: currentRequest)
+        requestObserver.newRequestArrived(currentRequest)
         session?.invalidateAndCancel()
     }
     
