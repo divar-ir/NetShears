@@ -11,9 +11,17 @@ public final class NetShears: NSObject {
     
     public static let shared = NetShears()
     let networkRequestInterceptor = NetworkRequestInterceptor()
+
     lazy var config: NetworkInterceptorConfig = {
         var savedModifiers = [RequestEvaluatorModifier]().retrieveFromDisk()
         return NetworkInterceptorConfig(modifiers: savedModifiers)
+    }()
+
+    lazy var requestObserver: RequestObserverProtocol = {
+        RequestObserver(options: [
+            RequestStorage.shared,
+            RequestBroadcast.shared
+        ])
     }()
     
     
@@ -56,6 +64,6 @@ public final class NetShears: NSObject {
                         HPACKHeadersRequest: [String: String]?,
                         HPACKHeadersResponse: [String: String]?){
         let request = NetShearsRequestModel(url: url, host: host, requestObject: requestObject, responseObject: responseObject, success: success, statusCode: statusCode, duration: duration, HPACKHeadersRequest: HPACKHeadersRequest, HPACKHeadersResponse: HPACKHeadersResponse)
-        Storage.shared.saveRequest(request: request)
+        requestObserver.newRequestArrived(request)
     }
 }

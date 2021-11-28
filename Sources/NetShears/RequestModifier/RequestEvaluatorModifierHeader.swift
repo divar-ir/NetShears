@@ -10,7 +10,7 @@ import Foundation
 public struct RequestEvaluatorModifierHeader: RequestEvaluatorModifier, Equatable, Codable {
     
     public var header: HeaderModifyModel
-
+    
     public static var storeFileName: String {
         "Header.txt"
     }

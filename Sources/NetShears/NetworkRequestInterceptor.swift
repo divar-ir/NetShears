@@ -7,25 +7,25 @@
 import Foundation
 
 
-@objc public class NetworkRequestInterceptor: NSObject{
-
+@objc class NetworkRequestInterceptor: NSObject{
+    
     func swizzleProtocolClasses(){
         let instance = URLSessionConfiguration.default
         let uRLSessionConfigurationClass: AnyClass = object_getClass(instance)!
-
+        
         let method1: Method = class_getInstanceMethod(uRLSessionConfigurationClass, #selector(getter: uRLSessionConfigurationClass.protocolClasses))!
         let method2: Method = class_getInstanceMethod(URLSessionConfiguration.self, #selector(URLSessionConfiguration.fakeProcotolClasses))!
-
+        
         method_exchangeImplementations(method1, method2)
     }
     
-    public func startRecording() {
+    func startRecording() {
         URLProtocol.registerClass(NetworkInterceptorUrlProtocol.self)
         URLProtocol.registerClass(NetworkLoggerUrlProtocol.self)
         swizzleProtocolClasses()
     }
     
-    public func stopRecording() {
+    func stopRecording() {
         URLProtocol.unregisterClass(NetworkInterceptorUrlProtocol.self)
         URLProtocol.unregisterClass(NetworkLoggerUrlProtocol.self)
         swizzleProtocolClasses()

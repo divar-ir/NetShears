@@ -10,7 +10,7 @@ import Foundation
 
 final class Storage: NSObject {
 
-    public static let shared: Storage = Storage()
+    static let shared: Storage = Storage()
     
     var requests: [NetShearsRequestModel] = []
     
@@ -21,9 +21,9 @@ final class Storage: NSObject {
         
         if let index = requests.firstIndex(where: { (req) -> Bool in
             return request?.id == req.id ? true : false
-        }){
+        }) {
             requests[index] = request!
-        }else{
+        } else {
             requests.insert(request!, at: 0)
         }
         NotificationCenter.default.post(name: NSNotification.Name.NewRequestNotification, object: nil)
