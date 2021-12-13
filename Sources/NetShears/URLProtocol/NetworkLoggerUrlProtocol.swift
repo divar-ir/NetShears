@@ -61,6 +61,7 @@ class NetworkLoggerUrlProtocol: URLProtocol {
         if let startDate = currentRequest?.date{
             currentRequest?.duration = fabs(startDate.timeIntervalSinceNow) * 1000 //Find elapsed time and convert to milliseconds
         }
+        currentRequest?.isFinished = true
         
         if let request = currentRequest {
             requestObserver.newRequestArrived(request)

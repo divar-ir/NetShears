@@ -8,22 +8,23 @@ import Foundation
 import UIKit
 
 public final class NetShearsRequestModel: Codable {
-    let id: String
-    let url: String
-    let host: String?
-    let port: Int?
-    let scheme: String?
-    let date: Date
-    let method: String
-    let headers: [String: String]
-    var credentials: [String : String]
-    var cookies: String?
-    var httpBody: Data?
-    var code: Int
-    var responseHeaders: [String: String]?
-    var dataResponse: Data?
-    var errorClientDescription: String?
-    var duration: Double?
+    public let id: String
+    public let url: String
+    public let host: String?
+    public let port: Int?
+    public let scheme: String?
+    public let date: Date
+    public let method: String
+    public let headers: [String: String]
+    public var credentials: [String : String]
+    public var cookies: String?
+    public var httpBody: Data?
+    public var code: Int
+    public var responseHeaders: [String: String]?
+    public var dataResponse: Data?
+    public var errorClientDescription: String?
+    public var duration: Double?
+    public var isFinished: Bool
     
     init(request: NSURLRequest, session: URLSession?) {
         id = UUID().uuidString
@@ -37,6 +38,7 @@ public final class NetShearsRequestModel: Codable {
         var headers = request.allHTTPHeaderFields ?? [:]
         httpBody = request.httpBody
         code = 0
+        isFinished = false
         
         
         // collect all HTTP Request headers except the "Cookie" header. Many request representations treat cookies with special parameters or structures. For cookie collection, refer to the bottom part of this method
