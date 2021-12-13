@@ -114,6 +114,7 @@ public final class NetShearsRequestModel: Codable {
         self.port = nil
         self.duration = duration
         self.credentials = [:]
+        self.isFinished = false
     }
     
     var curlRequest: String {
