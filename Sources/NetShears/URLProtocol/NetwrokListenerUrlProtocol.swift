@@ -1,5 +1,5 @@
 //
-//  NetworkLoggerUrlProtocol.swift
+//  NetwrokListenerUrlProtocol.swift
 //  NetShears
 //
 //  Created by Mehdi Mirzaie on 6/9/21.
@@ -7,10 +7,10 @@
 
 import Foundation
 
-class NetworkLoggerUrlProtocol: URLProtocol {
+class NetwrokListenerUrlProtocol: URLProtocol {
     
     struct Constants {
-        static let RequestHandledKey = "NetworkLoggerUrlProtocol"
+        static let RequestHandledKey = "NetworkListenerUrlProtocol"
     }
     
     var session: URLSession?
@@ -18,7 +18,7 @@ class NetworkLoggerUrlProtocol: URLProtocol {
     var currentRequest: NetShearsRequestModel?
     lazy var requestObserver: RequestObserverProtocol = {
         RequestObserver(options: [
-            RequestStorage.shared,
+            RequestBroadcast.shared
         ])
     }()
     
@@ -32,7 +32,7 @@ class NetworkLoggerUrlProtocol: URLProtocol {
     
     override class func canInit(with request: URLRequest) -> Bool {
         
-        if NetworkLoggerUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
+        if NetwrokListenerUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
             return false
         }
         return true
@@ -44,7 +44,7 @@ class NetworkLoggerUrlProtocol: URLProtocol {
     
     override func startLoading() {
         let newRequest = ((request as NSURLRequest).mutableCopy() as? NSMutableURLRequest)!
-        NetworkLoggerUrlProtocol.setProperty(true, forKey: Constants.RequestHandledKey, in: newRequest)
+        NetwrokListenerUrlProtocol.setProperty(true, forKey: Constants.RequestHandledKey, in: newRequest)
         sessionTask = session?.dataTask(with: newRequest as URLRequest)
         sessionTask?.resume()
         
@@ -83,7 +83,7 @@ class NetworkLoggerUrlProtocol: URLProtocol {
     }
 }
 
-extension NetworkLoggerUrlProtocol: URLSessionDataDelegate {
+extension NetwrokListenerUrlProtocol: URLSessionDataDelegate {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         client?.urlProtocol(self, didLoad: data)
         if currentRequest?.dataResponse == nil{

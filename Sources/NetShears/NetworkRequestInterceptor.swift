@@ -18,17 +18,35 @@ import Foundation
         
         method_exchangeImplementations(method1, method2)
     }
-    
-    func startRecording() {
+
+    func startInterceptor() {
+        NetShears.shared.interceptorEnable = true
         URLProtocol.registerClass(NetworkInterceptorUrlProtocol.self)
-        URLProtocol.registerClass(NetworkLoggerUrlProtocol.self)
-        swizzleProtocolClasses()
     }
-    
-    func stopRecording() {
+
+    func stopInterceptor() {
+        NetShears.shared.interceptorEnable = false
         URLProtocol.unregisterClass(NetworkInterceptorUrlProtocol.self)
+    }
+
+    func startLogger() {
+        NetShears.shared.loggerEnable = true
+        URLProtocol.registerClass(NetworkLoggerUrlProtocol.self)
+    }
+
+    func stopLogger() {
+        NetShears.shared.loggerEnable = false
         URLProtocol.unregisterClass(NetworkLoggerUrlProtocol.self)
-        swizzleProtocolClasses()
+    }
+
+    func startListener() {
+        NetShears.shared.listenerEnable = true
+        URLProtocol.registerClass(NetwrokListenerUrlProtocol.self)
+    }
+
+    func stopListener() {
+        NetShears.shared.listenerEnable = false
+        URLProtocol.unregisterClass(NetwrokListenerUrlProtocol.self)
     }
 }
 

@@ -12,15 +12,7 @@ import Foundation
     
     @objc static let shared = NetworkInterceptor()
     let networkRequestInterceptor = NetworkRequestInterceptor()
-    
-    func startRecording(){
-        self.networkRequestInterceptor.startRecording()
-    }
-    
-    func stopRecording(){
-        self.networkRequestInterceptor.stopRecording()
-    }
-    
+
     func shouldRequestModify(urlRequest: URLRequest) -> Bool {
         for modifer in NetShears.shared.config.modifiers {
             if modifer.isActionAllowed(urlRequest: urlRequest) {
