@@ -20,32 +20,33 @@ import Foundation
     }
 
     func startInterceptor() {
+        NetShears.shared.interceptorEnable = true
         URLProtocol.registerClass(NetworkInterceptorUrlProtocol.self)
     }
 
     func stopInterceptor() {
+        NetShears.shared.interceptorEnable = false
         URLProtocol.unregisterClass(NetworkInterceptorUrlProtocol.self)
-        swizzleProtocolClasses()
     }
 
     func startLogger() {
+        NetShears.shared.loggerEnable = true
         URLProtocol.registerClass(NetworkLoggerUrlProtocol.self)
-        swizzleProtocolClasses()
     }
 
     func stopLogger() {
+        NetShears.shared.loggerEnable = false
         URLProtocol.unregisterClass(NetworkLoggerUrlProtocol.self)
-        swizzleProtocolClasses()
     }
 
     func startListener() {
+        NetShears.shared.listenerEnable = true
         URLProtocol.registerClass(NetwrokListenerUrlProtocol.self)
-        swizzleProtocolClasses()
     }
 
     func stopListener() {
+        NetShears.shared.listenerEnable = false
         URLProtocol.unregisterClass(NetwrokListenerUrlProtocol.self)
-        swizzleProtocolClasses()
     }
 }
 

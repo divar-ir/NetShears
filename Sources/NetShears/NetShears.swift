@@ -10,6 +10,10 @@ import UIKit
 public final class NetShears: NSObject {
     
     public static let shared = NetShears()
+    internal var loggerEnable = false
+    internal var interceptorEnable = false
+    internal var listenerEnable = false
+    internal var swizzled = false
     let networkRequestInterceptor = NetworkRequestInterceptor()
 
     lazy var config: NetworkInterceptorConfig = {
@@ -24,29 +28,40 @@ public final class NetShears: NSObject {
         ])
     }()
     
-    
+    private func checkSwizzling() {
+        if swizzled == false {
+            self.networkRequestInterceptor.swizzleProtocolClasses()
+            swizzled = true
+        }
+    }
     public func startInterceptor() {
         self.networkRequestInterceptor.startInterceptor()
+        checkSwizzling()
     }
 
     public func stopInterceptor() {
         self.networkRequestInterceptor.stopInterceptor()
+        checkSwizzling()
     }
 
     public func startLogger() {
         self.networkRequestInterceptor.startLogger()
+        checkSwizzling()
     }
 
     public func stopLogger() {
         self.networkRequestInterceptor.stopLogger()
+        checkSwizzling()
     }
 
     public func startListener() {
         self.networkRequestInterceptor.startListener()
+        checkSwizzling()
     }
 
     public func stopListener() {
         self.networkRequestInterceptor.stopListener()
+        checkSwizzling()
     }
     
     public func modify(modifier: RequestEvaluatorModifier) {
