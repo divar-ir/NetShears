@@ -25,12 +25,28 @@ public final class NetShears: NSObject {
     }()
     
     
-    public func startRecording(){
-        self.networkRequestInterceptor.startRecording()
+    public func startInterceptor() {
+        self.networkRequestInterceptor.startInterceptor()
     }
-    
-    public func stopRecording(){
-        self.networkRequestInterceptor.stopRecording()
+
+    public func stopInterceptor() {
+        self.networkRequestInterceptor.stopInterceptor()
+    }
+
+    public func startLogger() {
+        self.networkRequestInterceptor.startLogger()
+    }
+
+    public func stopLogger() {
+        self.networkRequestInterceptor.stopLogger()
+    }
+
+    public func startListener() {
+        self.networkRequestInterceptor.startListener()
+    }
+
+    public func stopListener() {
+        self.networkRequestInterceptor.stopListener()
     }
     
     public func modify(modifier: RequestEvaluatorModifier) {

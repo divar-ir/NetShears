@@ -18,16 +18,33 @@ import Foundation
         
         method_exchangeImplementations(method1, method2)
     }
-    
-    func startRecording() {
+
+    func startInterceptor() {
         URLProtocol.registerClass(NetworkInterceptorUrlProtocol.self)
+    }
+
+    func stopInterceptor() {
+        URLProtocol.unregisterClass(NetworkInterceptorUrlProtocol.self)
+        swizzleProtocolClasses()
+    }
+
+    func startLogger() {
         URLProtocol.registerClass(NetworkLoggerUrlProtocol.self)
         swizzleProtocolClasses()
     }
-    
-    func stopRecording() {
-        URLProtocol.unregisterClass(NetworkInterceptorUrlProtocol.self)
+
+    func stopLogger() {
         URLProtocol.unregisterClass(NetworkLoggerUrlProtocol.self)
+        swizzleProtocolClasses()
+    }
+
+    func startListener() {
+        URLProtocol.registerClass(NetwrokListenerUrlProtocol.self)
+        swizzleProtocolClasses()
+    }
+
+    func stopListener() {
+        URLProtocol.unregisterClass(NetwrokListenerUrlProtocol.self)
         swizzleProtocolClasses()
     }
 }
