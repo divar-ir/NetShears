@@ -12,28 +12,35 @@ NetShears adds a Request interceptor mechanisms to be able to modify the HTTP/HT
 - [x] Intercept HTTP/HTTPS request header
 - [x] Intercept HTTP/HTTPS request endpoint
 - [x] View traffic logs
+- [x] Request obserever
 - [ ] Intercept HTTP/HTTPS response body
 - [ ] Block HTTP requets
 
 ## How it works
 
-NetShears working by swizzling the URLProtocol.
+NetShears has three main functionality :
 
-
-## How to use
-Start NetShears by calling  ```startRecording()```  in didFinishLaunchingWithOptions
-
+1 - Network request observer which can be used to observe every HTTP/HTTPS request using delegation.
 ```swift
-import NetShears
+Netshears.shared.startListener() 
+```
 
-func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+2 - Request interceptor mechanisms to be able to modify the HTTP/HTTPS Request before being sent.
+```swift
+Netshears.shared.startInterceptor() 
+```
 
-	NetShears.startRecording()
-
-}
+3 - Show network traffics.
+```swift
+Netshears.shared.startLogger() 
 ```
 
 ## Interceptor
+
+Make sure to call ```startInterceptor()``` before adding modifiers.
+```swift
+Netshears.shared.startInterceptor()
+```
 
 Header Modification:
 
@@ -52,6 +59,11 @@ NetShears.shared.modify(modifier: endpointModifier)
 ```
 
 # Traffic Monitoring
+
+Make sure to call ```startLogger()``` before showing netwrok traffic logs.
+```swift
+Netshears.shared.startLogger()
+```
 
 In order to show network traffics in your app simply call presentNetworkMonitor method and then a view will present containing traffic logs.
 
@@ -99,6 +111,16 @@ func insertNote(note: Note, completion: @escaping(Note?, CallResult?) -> Void) {
 }
 ```
 
+# Request Observer
+
+For observing requests you need to first call startListener then just simply adopt RequestBroadcast <RequestBroadcastDelegate> delegate.
+```swift
+NetShears.shared.startListener()
+
+RequestBroadcast.shared.setDelegate(self)
+
+```
+
 ## Installation
 
 ### [Swift Package Manager](https://github.com/apple/swift-package-manager)
@@ -113,7 +135,7 @@ import PackageDescription
 let package = Package(
   name: "YourProject",
   dependencies: [
-    .package(url: "https://github.com/divar-ir/NetShears.git", from: "1.0.0"),
+    .package(url: "https://github.com/divar-ir/NetShears.git", from: "3.0.1"),
   ],
   targets: [
     .target(name: "YourProject", dependencies: ["NetShears"])
