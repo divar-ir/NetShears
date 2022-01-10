@@ -99,7 +99,8 @@ public final class NetShearsRequestModel: Codable {
          statusCode: Int,
          duration: Double?,
          HPACKHeadersRequest: [String: String]?,
-         HPACKHeadersResponse: [String: String]?) {
+         HPACKHeadersResponse: [String: String]?,
+         isFinished: Bool = true) {
         self.id = UUID().uuidString
         self.method = "gRPC"
         self.scheme = "gRPC"
@@ -114,7 +115,7 @@ public final class NetShearsRequestModel: Codable {
         self.port = nil
         self.duration = duration
         self.credentials = [:]
-        self.isFinished = false
+        self.isFinished = isFinished
     }
     
     var curlRequest: String {
