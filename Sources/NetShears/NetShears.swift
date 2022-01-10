@@ -87,7 +87,7 @@ public final class NetShears: NSObject {
                         duration: Double?,
                         HPACKHeadersRequest: [String: String]?,
                         HPACKHeadersResponse: [String: String]?){
-        let request = NetShearsRequestModel(url: url, host: host, requestObject: requestObject, responseObject: responseObject, success: success, statusCode: statusCode, duration: duration, HPACKHeadersRequest: HPACKHeadersRequest, HPACKHeadersResponse: HPACKHeadersResponse)
+        let request = NetShearsRequestModel(url: url, host: host, requestObject: requestObject, responseObject: responseObject, success: success, statusCode: statusCode, duration: duration, HPACKHeadersRequest: HPACKHeadersRequest, HPACKHeadersResponse: HPACKHeadersResponse, isFinished: true)
         if loggerEnable {
             RequestStorage.shared.newRequestArrived(request)
         }
