@@ -93,6 +93,7 @@ public final class NetShearsRequestModel: Codable {
     
     init(url: String,
          host: String,
+         method: String,
          requestObject: Data?,
          responseObject: Data?,
          success: Bool,
@@ -102,7 +103,7 @@ public final class NetShearsRequestModel: Codable {
          HPACKHeadersResponse: [String: String]?,
          isFinished: Bool = true) {
         self.id = UUID().uuidString
-        self.method = "gRPC"
+        self.method = method
         self.scheme = "gRPC"
         self.url = url
         self.host = host
