@@ -17,7 +17,7 @@ public final class NetShears: NSObject {
     let networkRequestInterceptor = NetworkRequestInterceptor()
 
     lazy var config: NetworkInterceptorConfig = {
-        var savedModifiers = [RequestEvaluatorModifier]().retrieveFromDisk()
+        var savedModifiers = [Modifier]().retrieveFromDisk()
         return NetworkInterceptorConfig(modifiers: savedModifiers)
     }()
 
@@ -57,11 +57,11 @@ public final class NetShears: NSObject {
         checkSwizzling()
     }
     
-    public func modify(modifier: RequestEvaluatorModifier) {
+    public func modify(modifier: Modifier) {
         config.addModifier(modifier: modifier)
     }
     
-    public func modifiedList() -> [RequestEvaluatorModifier] {
+    public func modifiedList() -> [Modifier] {
         return config.modifiers
     }
     
