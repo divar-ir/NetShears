@@ -13,8 +13,8 @@ NetShears adds a Request interceptor mechanisms to be able to modify the HTTP/HT
 - [x] Intercept HTTP/HTTPS request endpoint
 - [x] View traffic logs
 - [x] Request obserever
-- [ ] Intercept HTTP/HTTPS response body
-- [ ] Block HTTP requets
+- [x] Intercept HTTP/HTTPS response body
+- [ ] Block HTTP requests
 
 ## How it works
 
@@ -56,6 +56,17 @@ Endpoint Modification:
 let endpoint = RedirectedRequestModel(originalUrl: "/register", redirectUrl: "/login")
 let endpointModifier = RequestEvaluatorModifierEndpoint(redirectedRequest: endpoint)
 NetShears.shared.modify(modifier: endpointModifier)
+```
+
+Response Modification
+
+```swift
+let response = HTTPResponseModifyModel(
+    url: "https://example.com/",
+    data: #"{"message": "ok"}"#.data(using: .utf8)!
+)
+let responseModifier = RequestEvaluatorModifierResponse(response: response)
+NetShears.shared.modify(modifier: responseModifier)
 ```
 
 # Traffic Monitoring

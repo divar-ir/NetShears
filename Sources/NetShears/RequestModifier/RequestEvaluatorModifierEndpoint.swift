@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equatable, Codable {
+public struct RequestEvaluatorModifierEndpoint: RequestEvaluatorModifier, Equatable {
     
     public var redirectedRequest: RedirectedRequestModel
     

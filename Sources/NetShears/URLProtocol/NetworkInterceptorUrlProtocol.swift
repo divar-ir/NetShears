@@ -29,7 +29,7 @@ class NetworkInterceptorUrlProtocol: URLProtocol {
         guard NetworkInterceptor.shared.shouldRequestModify(urlRequest: request) else { return false }
         
         if NetworkInterceptorUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
-            return false
+            return actionModifier(forRequest: request) != nil
         }
         return true
     }
@@ -41,8 +41,14 @@ class NetworkInterceptorUrlProtocol: URLProtocol {
     }
     
     override func startLoading() {
+        if let actionModifier = Self.actionModifier(forRequest: request) {
+            actionModifier.modify(client: client, urlProtocol: self)
+            return
+        }
+        
         var newRequest = request
-        for modifier in NetShears.shared.config.modifiers where modifier.isActionAllowed(urlRequest: request) {
+        let modifiers = NetShears.shared.config.modifiers.compactMap({ $0 as? RequestEvaluatorModifier })
+        for modifier in modifiers where modifier.isActionAllowed(urlRequest: request) {
             modifier.modify(request: &newRequest)
         }
         
@@ -59,6 +65,13 @@ class NetworkInterceptorUrlProtocol: URLProtocol {
     deinit {
         session = nil
         sessionTask = nil
+    }
+    
+    class func actionModifier(forRequest request: URLRequest) -> RequestEvaluatorActionModifier? {
+        NetShears.shared.config.modifiers
+            .compactMap({ $0 as? RequestEvaluatorActionModifier })
+            .filter({ $0.isActionAllowed(urlRequest: request) })
+            .last
     }
 }
 
