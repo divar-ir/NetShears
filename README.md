@@ -12,7 +12,7 @@ NetShears adds a Request interceptor mechanisms to be able to modify the HTTP/HT
 - [x] Intercept HTTP/HTTPS request header
 - [x] Intercept HTTP/HTTPS request endpoint
 - [x] View traffic logs
-- [x] Request obserever
+- [x] Request observer
 - [x] Intercept HTTP/HTTPS response body
 - [ ] Block HTTP requests
 
