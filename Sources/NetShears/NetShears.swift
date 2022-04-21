@@ -77,6 +77,7 @@ public final class NetShears: NSObject {
         let storyboard = UIStoryboard.NetShearsStoryBoard
         if let initialVC = storyboard.instantiateInitialViewController(){
             initialVC.modalPresentationStyle = .fullScreen
+            (initialVC as? RequestsViewController)?.delegate = delegate
             UIViewController.currentViewController()?.present(initialVC, animated: true, completion: nil)
         }
     }
