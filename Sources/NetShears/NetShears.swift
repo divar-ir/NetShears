@@ -7,6 +7,10 @@
 
 import UIKit
 
+public protocol BodyExporterDelegate: AnyObject {
+    func netShears(exportBodyFor request: NetShearsRequestModel) -> BodyExportType
+}
+
 public final class NetShears: NSObject {
     
     public static let shared = NetShears()
@@ -69,7 +73,7 @@ public final class NetShears: NSObject {
         return config.removeModifier(at: index)
     }
 
-    public func presentNetworkMonitor(){
+    public func presentNetworkMonitor(delegate: BodyExporterDelegate? = nil) {
         let storyboard = UIStoryboard.NetShearsStoryBoard
         if let initialVC = storyboard.instantiateInitialViewController(){
             initialVC.modalPresentationStyle = .fullScreen

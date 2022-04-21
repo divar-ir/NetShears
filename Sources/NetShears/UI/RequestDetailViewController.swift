@@ -11,6 +11,7 @@ import UIKit
 final class RequestDetailViewController: UIViewController, ShowLoaderProtocol {
     
     @IBOutlet weak var tableView: UITableView!
+    weak var delegate: BodyExporterDelegate?
     
     var request: NetShearsRequestModel?
     var sections: [NetShearsSection] = [
@@ -73,8 +74,13 @@ final class RequestDetailViewController: UIViewController, ShowLoaderProtocol {
     
     func shareContent(_ sender: UIBarButtonItem, requestExportOption: RequestResponseExportOption = .flat){
         if let request = request{
-            NSHelper.shareRequests(presentingViewController: self, sender: sender, requests: [request], requestExportOption: requestExportOption)
+            NSHelper.shareRequests(presentingViewController: self, sender: sender, requests: [request], requestExportOption: requestExportOption, delegate: delegate)
         }
+    }
+    
+    private var bodyExportType: BodyExportType {
+        guard let request = request else { return .default }
+        return delegate?.netShears(exportBodyFor: request) ?? .default
     }
     
     func openBodyDetailVC(title: String?, body: Data?){
@@ -82,6 +88,7 @@ final class RequestDetailViewController: UIViewController, ShowLoaderProtocol {
         if let requestDetailVC = storyboard.instantiateViewController(withIdentifier: "BodyDetailViewController") as? BodyDetailViewController{
             requestDetailVC.title = title
             requestDetailVC.data = body
+            requestDetailVC.bodyExportType = bodyExportType
             self.show(requestDetailVC, sender: self)
         }
     }

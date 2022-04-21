@@ -7,6 +7,11 @@
 
 import UIKit
 
+public enum BodyExportType {
+    case `default`
+    case custom(_ text: String)
+}
+
 final class RequestExporter: NSObject {
     
     static func overview(request: NetShearsRequestModel) -> NSMutableAttributedString{
@@ -33,14 +38,18 @@ final class RequestExporter: NSObject {
         return final
     }
     
-    static func body(_ body: Data?, splitLength: Int? = nil, completion: @escaping (String) -> Void){
+    static func body(_ body: Data?, splitLength: Int? = nil, bodyExportType: BodyExportType, completion: @escaping (String) -> Void){
         DispatchQueue.global().async {
-            completion(RequestExporter.body(body, splitLength: splitLength))
+            completion(RequestExporter.body(body, splitLength: splitLength, bodyExportType: bodyExportType))
             return
         }
     }
     
-    static func body(_ body: Data?, splitLength: Int? = nil) -> String{
+    static func body(_ body: Data?, splitLength: Int? = nil, bodyExportType: BodyExportType) -> String {
+        if case .custom(let text) = bodyExportType {
+            return text
+        }
+        
         guard body != nil else {
             return "-"
         }
@@ -52,7 +61,7 @@ final class RequestExporter: NSObject {
         return "-"
     }
     
-    static func txtExport(request: NetShearsRequestModel) -> String{
+    static func txtExport(request: NetShearsRequestModel, bodyExportType: BodyExportType) -> String{
         
         var txt: String = ""
         txt.append("*** Overview *** \n")
@@ -60,18 +69,18 @@ final class RequestExporter: NSObject {
         txt.append("*** Request Header *** \n")
         txt.append(header(request.headers).string + "\n\n")
         txt.append("*** Request Body *** \n")
-        txt.append(body(request.httpBody) + "\n\n")
+        txt.append(body(request.httpBody, bodyExportType: .default) + "\n\n")
         txt.append("*** Response Header *** \n")
         txt.append(header(request.responseHeaders).string + "\n\n")
         txt.append("*** Response Body *** \n")
-        txt.append(body(request.dataResponse) + "\n\n")
+        txt.append(body(request.dataResponse, bodyExportType: bodyExportType) + "\n\n")
         txt.append("------------------------------------------------------------------------\n")
         txt.append("------------------------------------------------------------------------\n")
         txt.append("------------------------------------------------------------------------\n\n\n\n")
         return txt
     }
     
-    static func curlExport(request: NetShearsRequestModel) -> String{
+    static func curlExport(request: NetShearsRequestModel, bodyExportType: BodyExportType) -> String{
         
         var txt: String = ""
         txt.append("*** Overview *** \n")
@@ -81,7 +90,7 @@ final class RequestExporter: NSObject {
         txt.append("*** Response Header *** \n")
         txt.append(header(request.responseHeaders).string + "\n\n")
         txt.append("*** Response Body *** \n")
-        txt.append(body(request.dataResponse) + "\n\n")
+        txt.append(body(request.dataResponse, bodyExportType: bodyExportType) + "\n\n")
         txt.append("------------------------------------------------------------------------\n")
         txt.append("------------------------------------------------------------------------\n")
         txt.append("------------------------------------------------------------------------\n\n\n\n")

@@ -10,13 +10,13 @@ import UIKit
 
 final class NSHelper {
 
-    static func shareRequests(presentingViewController: UIViewController, sender: UIBarButtonItem, requests: [NetShearsRequestModel], requestExportOption: RequestResponseExportOption = .flat){
+    static func shareRequests(presentingViewController: UIViewController, sender: UIBarButtonItem, requests: [NetShearsRequestModel], requestExportOption: RequestResponseExportOption = .flat, delegate: BodyExporterDelegate?){
          var text = ""
          switch requestExportOption {
          case .flat:
-             text = getTxtText(requests: requests)
+             text = getTxtText(requests: requests, delegate: delegate)
          case .curl:
-             text = getCurlText(requests: requests)
+             text = getCurlText(requests: requests, delegate: delegate)
          case .postman:
             text = getPostmanCollection(requests: requests) ?? "{}"
             text = text.replacingOccurrences(of: "\\/", with: "/")
@@ -42,18 +42,20 @@ final class NSHelper {
          presentingViewController.present(activityViewController, animated: true, completion: nil)
      }
         
-    private static func getTxtText(requests: [NetShearsRequestModel]) -> String {
+    private static func getTxtText(requests: [NetShearsRequestModel], delegate: BodyExporterDelegate?) -> String {
         var text: String = ""
         for request in requests{
-            text = text + RequestExporter.txtExport(request: request)
+            let bodyExportType = delegate?.netShears(exportBodyFor: request) ?? .default
+            text = text + RequestExporter.txtExport(request: request, bodyExportType: bodyExportType)
         }
         return text
     }
     
-    private static func getCurlText(requests: [NetShearsRequestModel]) -> String {
+    private static func getCurlText(requests: [NetShearsRequestModel], delegate: BodyExporterDelegate?) -> String {
         var text: String = ""
         for request in requests{
-            text = text + RequestExporter.curlExport(request: request)
+            let bodyExportType = delegate?.netShears(exportBodyFor: request) ?? .default
+            text = text + RequestExporter.curlExport(request: request, bodyExportType: bodyExportType)
         }
         return text
     }
