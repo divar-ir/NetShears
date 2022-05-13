@@ -11,7 +11,7 @@ import UIKit
 final class RequestDetailViewController: UIViewController, ShowLoaderProtocol {
     
     @IBOutlet weak var tableView: UITableView!
-    weak var delegate: BodyExporterDelegate?
+    weak var delegate: BodyExporterDelegate? = NetShears.shared.bodyExportDelegate
     
     var request: NetShearsRequestModel?
     var sections: [NetShearsSection] = [

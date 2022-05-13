@@ -18,7 +18,7 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
 
     static let kPadding: CGFloat = 10.0
     
-    var bodyExportType: BodyExportType?
+    var bodyExportType: BodyExportType = .default
 
     var searchController: UISearchController?
     var highlightedWords: [NSTextCheckingResult] = []
