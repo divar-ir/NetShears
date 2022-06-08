@@ -11,7 +11,7 @@ import UIKit
 final class RequestDetailViewController: UIViewController, ShowLoaderProtocol {
     
     @IBOutlet weak var tableView: UITableView!
-    weak var delegate: BodyExporterDelegate? = NetShears.shared.bodyExportDelegate
+    weak var delegate: BodyExporterDelegate?
     
     var request: NetShearsRequestModel?
     var sections: [NetShearsSection] = [
@@ -78,17 +78,22 @@ final class RequestDetailViewController: UIViewController, ShowLoaderProtocol {
         }
     }
     
-    private var bodyExportType: BodyExportType {
+    private var responseExportType: BodyExportType {
         guard let request = request else { return .default }
-        return delegate?.netShears(exportBodyFor: request) ?? .default
+        return delegate?.netShears(exportResponseBodyFor: request) ?? .default
+    }
+
+    private var requestExportType: BodyExportType {
+        guard let request = request else { return .default }
+        return delegate?.netShears(exportRequestBodyFor: request) ?? .default
     }
     
-    func openBodyDetailVC(title: String?, body: Data?){
+    func openBodyDetailVC(title: String?, body: Data?, exportType: BodyExportType) {
         let storyboard = UIStoryboard.NetShearsStoryBoard
         if let requestDetailVC = storyboard.instantiateViewController(withIdentifier: "BodyDetailViewController") as? BodyDetailViewController{
             requestDetailVC.title = title
             requestDetailVC.data = body
-            requestDetailVC.bodyExportType = bodyExportType
+            requestDetailVC.bodyExportType = exportType
             self.show(requestDetailVC, sender: self)
         }
     }
@@ -153,10 +158,10 @@ extension RequestDetailViewController: UITableViewDelegate{
         
         switch section.type {
         case .requestBody:
-            openBodyDetailVC(title: "Request Body", body: request?.httpBody)
+            openBodyDetailVC(title: "Request Body", body: request?.httpBody, exportType: requestExportType)
             break
         case .responseBody:
-            openBodyDetailVC(title: "Response Body", body: request?.dataResponse)
+            openBodyDetailVC(title: "Response Body", body: request?.dataResponse, exportType: responseExportType)
             break
         default:
             break

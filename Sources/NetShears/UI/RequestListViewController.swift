@@ -120,6 +120,7 @@ class RequestsViewController: UIViewController, ShowLoaderProtocol {
         let storyboard = UIStoryboard.NetShearsStoryBoard
         if let requestDetailVC = storyboard.instantiateViewController(withIdentifier: String(describing: RequestDetailViewController.self)) as? RequestDetailViewController{
             requestDetailVC.request = request
+            requestDetailVC.delegate = delegate
             self.show(requestDetailVC, sender: self)
         }
     }

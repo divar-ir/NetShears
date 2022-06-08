@@ -45,8 +45,7 @@ final class NSHelper {
     private static func getTxtText(requests: [NetShearsRequestModel], delegate: BodyExporterDelegate?) -> String {
         var text: String = ""
         for request in requests{
-            let bodyExportType = delegate?.netShears(exportBodyFor: request) ?? .default
-            text = text + RequestExporter.txtExport(request: request, bodyExportType: bodyExportType)
+            text = text + RequestExporter.txtExport(request: request, delegate: delegate)
         }
         return text
     }
@@ -54,8 +53,7 @@ final class NSHelper {
     private static func getCurlText(requests: [NetShearsRequestModel], delegate: BodyExporterDelegate?) -> String {
         var text: String = ""
         for request in requests{
-            let bodyExportType = delegate?.netShears(exportBodyFor: request) ?? .default
-            text = text + RequestExporter.curlExport(request: request, bodyExportType: bodyExportType)
+            text = text + RequestExporter.curlExport(request: request, delegate: delegate)
         }
         return text
     }

@@ -8,7 +8,13 @@
 import UIKit
 
 public protocol BodyExporterDelegate: AnyObject {
-    func netShears(exportBodyFor request: NetShearsRequestModel) -> BodyExportType
+    func netShears(exportResponseBodyFor request: NetShearsRequestModel) -> BodyExportType
+    func netShears(exportRequestBodyFor request: NetShearsRequestModel) -> BodyExportType
+}
+
+public extension BodyExporterDelegate {
+    func netShears(exportResponseBodyFor request: NetShearsRequestModel) -> BodyExportType { .default }
+    func netShears(exportRequestBodyFor request: NetShearsRequestModel) -> BodyExportType { .default }
 }
 
 public final class NetShears: NSObject {
@@ -74,10 +80,11 @@ public final class NetShears: NSObject {
         return config.removeModifier(at: index)
     }
 
-    public func presentNetworkMonitor(delegate: BodyExporterDelegate? = nil) {
+    public func presentNetworkMonitor() {
         let storyboard = UIStoryboard.NetShearsStoryBoard
         if let initialVC = storyboard.instantiateInitialViewController(){
             initialVC.modalPresentationStyle = .fullScreen
+            ((initialVC as? UINavigationController)?.topViewController as? RequestsViewController)?.delegate = bodyExportDelegate
             UIViewController.currentViewController()?.present(initialVC, animated: true, completion: nil)
         }
     }

@@ -61,7 +61,7 @@ final class RequestExporter: NSObject {
         return "-"
     }
     
-    static func txtExport(request: NetShearsRequestModel, bodyExportType: BodyExportType) -> String{
+    static func txtExport(request: NetShearsRequestModel, delegate: BodyExporterDelegate?) -> String{
         
         var txt: String = ""
         txt.append("*** Overview *** \n")
@@ -69,18 +69,18 @@ final class RequestExporter: NSObject {
         txt.append("*** Request Header *** \n")
         txt.append(header(request.headers).string + "\n\n")
         txt.append("*** Request Body *** \n")
-        txt.append(body(request.httpBody, bodyExportType: .default) + "\n\n")
+        txt.append(body(request.httpBody, bodyExportType: delegate?.netShears(exportRequestBodyFor: request) ?? .default) + "\n\n")
         txt.append("*** Response Header *** \n")
         txt.append(header(request.responseHeaders).string + "\n\n")
         txt.append("*** Response Body *** \n")
-        txt.append(body(request.dataResponse, bodyExportType: bodyExportType) + "\n\n")
+        txt.append(body(request.dataResponse, bodyExportType: delegate?.netShears(exportResponseBodyFor: request) ?? .default) + "\n\n")
         txt.append("------------------------------------------------------------------------\n")
         txt.append("------------------------------------------------------------------------\n")
         txt.append("------------------------------------------------------------------------\n\n\n\n")
         return txt
     }
     
-    static func curlExport(request: NetShearsRequestModel, bodyExportType: BodyExportType) -> String{
+    static func curlExport(request: NetShearsRequestModel, delegate: BodyExporterDelegate?) -> String{
         
         var txt: String = ""
         txt.append("*** Overview *** \n")
@@ -90,7 +90,7 @@ final class RequestExporter: NSObject {
         txt.append("*** Response Header *** \n")
         txt.append(header(request.responseHeaders).string + "\n\n")
         txt.append("*** Response Body *** \n")
-        txt.append(body(request.dataResponse, bodyExportType: bodyExportType) + "\n\n")
+        txt.append(body(request.dataResponse, bodyExportType: delegate?.netShears(exportResponseBodyFor: request) ?? .default) + "\n\n")
         txt.append("------------------------------------------------------------------------\n")
         txt.append("------------------------------------------------------------------------\n")
         txt.append("------------------------------------------------------------------------\n\n\n\n")
