@@ -17,6 +17,8 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
     @IBOutlet weak var buttonNext: UIBarButtonItem!
 
     static let kPadding: CGFloat = 10.0
+    
+    var bodyExportType: BodyExportType = .default
 
     var searchController: UISearchController?
     var highlightedWords: [NSTextCheckingResult] = []
@@ -47,7 +49,7 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let hud = showLoader(view: view)
-        RequestExporter.body(data) { [weak self] (stringData) in
+        RequestExporter.body(data, bodyExportType: bodyExportType ?? .default) { [weak self] (stringData) in
             let formattedJSON = stringData
             DispatchQueue.main.async {
                 self?.textView.text = formattedJSON
