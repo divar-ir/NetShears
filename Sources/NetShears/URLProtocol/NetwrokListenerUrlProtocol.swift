@@ -31,7 +31,9 @@ class NetwrokListenerUrlProtocol: URLProtocol {
     }
     
     override class func canInit(with request: URLRequest) -> Bool {
-        
+        guard !Ignore.shouldIgnore(request: request, on: .listener) else {
+            return false
+        }
         if NetwrokListenerUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
             return false
         }
@@ -49,8 +51,8 @@ class NetwrokListenerUrlProtocol: URLProtocol {
         sessionTask?.resume()
         
         currentRequest = NetShearsRequestModel(request: newRequest, session: session)
-        if let request = currentRequest {
-            requestObserver.newRequestArrived(request)
+        if let currentRequest = currentRequest, !Ignore.shouldIgnore(request: request, on: .listener) {
+            requestObserver.newRequestArrived(currentRequest)
         }
     }
     

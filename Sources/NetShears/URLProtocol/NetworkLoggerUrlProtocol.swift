@@ -31,7 +31,9 @@ class NetworkLoggerUrlProtocol: URLProtocol {
     }
     
     override class func canInit(with request: URLRequest) -> Bool {
-        
+        guard !Ignore.shouldIgnore(request: request, on: .logger) else {
+            return false
+        }
         if NetworkLoggerUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
             return false
         }
@@ -49,8 +51,8 @@ class NetworkLoggerUrlProtocol: URLProtocol {
         sessionTask?.resume()
         
         currentRequest = NetShearsRequestModel(request: newRequest, session: session)
-        if let request = currentRequest {
-            requestObserver.newRequestArrived(request)
+        if let currentRequest = currentRequest, !Ignore.shouldIgnore(request: request, on: .logger) {
+            requestObserver.newRequestArrived(currentRequest)
         }
     }
     
@@ -93,7 +95,7 @@ extension NetworkLoggerUrlProtocol: URLSessionDataDelegate {
             currentRequest?.dataResponse?.append(data)
         }
     }
-    
+
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         let policy = URLCache.StoragePolicy(rawValue: request.cachePolicy.rawValue) ?? .notAllowed
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: policy)

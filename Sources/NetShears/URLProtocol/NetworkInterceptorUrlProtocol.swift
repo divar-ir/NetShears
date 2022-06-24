@@ -26,6 +26,9 @@ class NetworkInterceptorUrlProtocol: URLProtocol {
     }
     
     override class func canInit(with request: URLRequest) -> Bool {
+        guard !Ignore.shouldIgnore(request: request, on: .interceptor) else {
+            return false
+        }
         guard NetworkInterceptor.shared.shouldRequestModify(urlRequest: request) else { return false }
         
         if NetworkInterceptorUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
@@ -48,11 +51,13 @@ class NetworkInterceptorUrlProtocol: URLProtocol {
         
         var newRequest = request
         let modifiers = NetShears.shared.config.modifiers.compactMap({ $0 as? RequestEvaluatorModifier })
-        for modifier in modifiers where modifier.isActionAllowed(urlRequest: request) {
-            modifier.modify(request: &newRequest)
+        if !Ignore.shouldIgnore(request: request, on: .interceptor) {
+            for modifier in modifiers where modifier.isActionAllowed(urlRequest: request) {
+                modifier.modify(request: &newRequest)
+            }
+            newRequest.addValue("true", forHTTPHeaderField: "Modified")
         }
-        
-        newRequest.addValue("true", forHTTPHeaderField: "Modified")
+
         sessionTask = session?.dataTask(with: newRequest as URLRequest)
         sessionTask?.resume()
     }
