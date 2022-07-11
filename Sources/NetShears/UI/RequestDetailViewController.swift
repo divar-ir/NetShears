@@ -42,9 +42,9 @@ final class RequestDetailViewController: UIViewController, ShowLoaderProtocol {
         
         tableView.estimatedRowHeight = 100.0
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.register(UINib(nibName: "TextTableViewCell", bundle: Bundle.module), forCellReuseIdentifier: "TextTableViewCell")
-        tableView.register(UINib(nibName: "ActionableTableViewCell", bundle: Bundle.module), forCellReuseIdentifier: "ActionableTableViewCell")
-        tableView.register(UINib(nibName: "RequestTitleSectionView", bundle: Bundle.module), forHeaderFooterViewReuseIdentifier: "RequestTitleSectionView")
+        tableView.register(UINib(nibName: "TextTableViewCell", bundle: Bundle.NetShearsBundle), forCellReuseIdentifier: "TextTableViewCell")
+        tableView.register(UINib(nibName: "ActionableTableViewCell", bundle: Bundle.NetShearsBundle), forCellReuseIdentifier: "ActionableTableViewCell")
+        tableView.register(UINib(nibName: "RequestTitleSectionView", bundle: Bundle.NetShearsBundle), forHeaderFooterViewReuseIdentifier: "RequestTitleSectionView")
     }
     
     override func didReceiveMemoryWarning() {

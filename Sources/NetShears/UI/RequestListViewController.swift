@@ -39,7 +39,7 @@ class RequestsViewController: UIViewController, ShowLoaderProtocol {
     }
     
     private func registerNibs() {
-        collectionView?.register(UINib(nibName: String(describing: RequestCell.self), bundle: Bundle.module), forCellWithReuseIdentifier: requestCellIdentifier)
+        collectionView?.register(UINib(nibName: String(describing: RequestCell.self), bundle: Bundle.NetShearsBundle), forCellWithReuseIdentifier: requestCellIdentifier)
     }
     
     //  MARK: - Search

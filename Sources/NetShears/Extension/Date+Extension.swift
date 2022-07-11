@@ -18,16 +18,3 @@ extension Date{
     }
 }
 
-
-extension Bundle {
-    static var NetShearsBundle: Bundle {
-        let podBundle = Bundle(for: NetShears.classForCoder())
-        if let bundleURL = podBundle.url(forResource: "NetShears", withExtension: "bundle"){
-            if let bundle = Bundle(url: bundleURL) {
-                return bundle
-            }
-        }
-        
-        return Bundle(for: NetShears.classForCoder())
-    }
-}

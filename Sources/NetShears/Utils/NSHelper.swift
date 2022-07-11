@@ -23,7 +23,7 @@ final class NSHelper {
         }
          
         let textShare = [text]
-        let customItem = NSActivity(title: "Save to the desktop", image: UIImage(named: "activity_icon", in: Bundle.module, compatibleWith: nil)) { (sharedItems) in
+        let customItem = NSActivity(title: "Save to the desktop", image: UIImage(named: "activity_icon", in: Bundle.NetShearsBundle, compatibleWith: nil)) { (sharedItems) in
              guard let sharedStrings = sharedItems as? [String] else { return }
             
             let appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
