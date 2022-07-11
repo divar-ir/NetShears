@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "NetShears"
-  s.version      = "3.2.1"
+  s.version      = "3.2.3"
   s.summary      = "iOS Network interceptor framework written in Swift"
 
   s.description  = <<-DESC
