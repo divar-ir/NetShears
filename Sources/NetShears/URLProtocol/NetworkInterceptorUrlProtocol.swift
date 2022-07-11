@@ -26,7 +26,13 @@ class NetworkInterceptorUrlProtocol: URLProtocol {
     }
     
     override class func canInit(with request: URLRequest) -> Bool {
-        guard NetworkInterceptor.shared.shouldRequestModify(urlRequest: request) else { return false }
+        let shouldRequestModify: (URLRequest) -> Bool = { urlRequest in
+            for modifer in NetShears.shared.config.modifiers {
+                if modifer.isActionAllowed(urlRequest: urlRequest) { return true }
+            }
+            return false
+        }
+        guard shouldRequestModify(request) else { return false }
         
         if NetworkInterceptorUrlProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
             return actionModifier(forRequest: request) != nil
@@ -36,7 +42,7 @@ class NetworkInterceptorUrlProtocol: URLProtocol {
     
     open override class func canonicalRequest(for request: URLRequest) -> URLRequest {
         let mutableRequest: NSMutableURLRequest = (request as NSURLRequest).mutableCopy() as! NSMutableURLRequest
-        URLProtocol.setProperty("YES", forKey: "NetworkInterceptorUrlProtocol", in: mutableRequest)
+        URLProtocol.setProperty(true, forKey: Constants.RequestHandledKey, in: mutableRequest)
         return mutableRequest.copy() as! URLRequest
     }
     
