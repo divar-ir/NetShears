@@ -49,7 +49,7 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let hud = showLoader(view: view)
-        RequestExporter.body(data, bodyExportType: bodyExportType ?? .default) { [weak self] (stringData) in
+        RequestExporter.body(data, bodyExportType: bodyExportType ) { [weak self] (stringData) in
             let formattedJSON = stringData
             DispatchQueue.main.async {
                 self?.textView.text = formattedJSON
