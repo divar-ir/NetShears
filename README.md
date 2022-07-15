@@ -146,7 +146,7 @@ import PackageDescription
 let package = Package(
   name: "YourProject",
   dependencies: [
-    .package(url: "https://github.com/divar-ir/NetShears.git", from: "3.0.1"),
+    .package(url: "https://github.com/divar-ir/NetShears.git", from: "3.2.3"),
   ],
   targets: [
     .target(name: "YourProject", dependencies: ["NetShears"])
