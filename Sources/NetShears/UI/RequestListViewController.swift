@@ -14,7 +14,7 @@ class RequestsViewController: UIViewController, ShowLoaderProtocol {
     @IBOutlet weak var collectionView: UICollectionView!
     weak var delegate: BodyExporterDelegate?
 
-    private var filteredRequests: [NetShearsRequestModel] = Storage.shared.requests
+    private var filteredRequests: [NetShearsRequestModel] = Storage.shared.filteredRequests
     
     private var searchController: UISearchController?
     private let requestCellIdentifier = String(describing: RequestCell.self)
@@ -62,9 +62,9 @@ class RequestsViewController: UIViewController, ShowLoaderProtocol {
     }
     
     private func filterRequests(text: String?) -> [NetShearsRequestModel]{
-        guard let searchText = text, !searchText.isEmpty else { return Storage.shared.requests }
+        guard let searchText = text, !searchText.isEmpty else { return Storage.shared.filteredRequests }
         
-        return Storage.shared.requests.filter {
+        return Storage.shared.filteredRequests.filter {
              $0.url.range(of: searchText, options: .caseInsensitive) != nil
         }
     }
@@ -97,7 +97,7 @@ class RequestsViewController: UIViewController, ShowLoaderProtocol {
 
     private func clearRequests() {
         Storage.shared.clearRequests()
-        filteredRequests = Storage.shared.requests
+        filteredRequests = Storage.shared.filteredRequests
         collectionView.reloadData()
     }
     

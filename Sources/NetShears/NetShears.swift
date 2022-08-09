@@ -27,6 +27,8 @@ public final class NetShears: NSObject {
     internal var swizzled = false
     let networkRequestInterceptor = NetworkRequestInterceptor()
 
+    public var ignore: Ignore = .disbaled
+
     lazy var config: NetworkInterceptorConfig = {
         var savedModifiers = [Modifier]().retrieveFromDisk()
         return NetworkInterceptorConfig(modifiers: savedModifiers)
