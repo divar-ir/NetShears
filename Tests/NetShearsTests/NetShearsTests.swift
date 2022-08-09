@@ -78,4 +78,50 @@ final class NetShearsTests: XCTestCase {
         
         wait(for: [expectation], timeout: 1)
     }
+
+    func testIgnoreOnUrlRequest() {
+        //given
+        let url = "https://example.com/"
+        NetShears.shared.ignore = .enabled(ignoreHandler: { request in
+            request.url.contains("example")
+        })
+
+        //when
+        NetShears.shared.startLogger()
+        URLSession.shared.dataTask(with: URL(string: url)!) { data, response, _ in
+            //then
+            XCTAssertTrue(Storage.shared.requests.contains(where: { $0.url == url }))
+            XCTAssertTrue(Storage.shared.filteredRequests.isEmpty)
+            self.expectation.fulfill()
+        }.resume()
+
+        wait(for: [expectation], timeout: 2)
+    }
+
+    func testIgnoreOnHeaderRequest() {
+        //given
+        let headerKey = "language"
+        let headerValue = "rus"
+        var request = URLRequest(url: URL(string: "https://example.com/")!)
+        request.setValue(headerValue, forHTTPHeaderField: headerKey)
+        NetShears.shared.ignore = .enabled(ignoreHandler: { request in
+            if let value = request.headers[headerKey] {
+                return value == headerValue
+            }
+            return false
+        })
+
+        //when
+        NetShears.shared.startLogger()
+        URLSession.shared.dataTask(with: request) { data, response, _ in
+            //then
+            XCTAssertTrue(Storage.shared.requests.contains(where: { $0.headers.contains { (key,value) in
+                key == headerKey && value == headerValue
+            }}))
+            XCTAssertTrue(Storage.shared.filteredRequests.isEmpty)
+            self.expectation.fulfill()
+        }.resume()
+
+        wait(for: [expectation], timeout: 2)
+    }
 }
