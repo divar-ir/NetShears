@@ -12,8 +12,12 @@ final class Storage: NSObject {
 
     static let shared: Storage = Storage()
     
-    var requests: [NetShearsRequestModel] = []
-    
+    private(set) var requests: [NetShearsRequestModel] = []
+
+    var filteredRequests: [NetShearsRequestModel] {
+        return getFilteredRequests()
+    }
+
     func saveRequest(request: NetShearsRequestModel?){
         guard request != nil else {
             return
@@ -32,4 +36,13 @@ final class Storage: NSObject {
     func clearRequests() {
         requests.removeAll()
     }
+
+    private func getFilteredRequests() -> [NetShearsRequestModel] {
+        guard case Ignore.enabled(let ignoreHandler) = NetShears.shared.ignore else {
+            return requests
+        }
+        let filteredRequests = requests.filter { ignoreHandler($0) == false }
+        return filteredRequests
+    }
+
 }
