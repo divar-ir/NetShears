@@ -133,7 +133,7 @@ NetShears.shared.ignore = .enabled(ignoreHandler: { request in
     request.url.contains("google")
 })
 ```
-Note that requests will be ignored **just** in UI; so at run-time you can set another ```ignoreHandler``` and get different results.
+Note that requests will be ignored **just** in Traffic Monitoring View; so you can set another ```ignoreHandler``` and get different results.
 By default ```NetShears.ignore``` is ```.disabled```.
 
 # Request Observer
