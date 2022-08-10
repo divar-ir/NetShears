@@ -122,6 +122,20 @@ func insertNote(note: Note, completion: @escaping(Note?, CallResult?) -> Void) {
 }
 ```
 
+## Ignore requests 
+
+You can ignore requests by setting ```NetShears.ignore``` to ```.enabled``` and set its ```ignoreHandler``` as below:
+
+Example
+
+```swift
+NetShears.shared.ignore = .enabled(ignoreHandler: { request in
+    request.url.contains("google")
+})
+```
+Note that requests will be ignored **just** in UI; so at run-time you can set another ```ignoreHandler``` and get different results.
+By default ```NetShears.ignore``` is ```.disabled```.
+
 # Request Observer
 
 For observing requests you need to first call startListener then just simply adopt RequestBroadcast <RequestBroadcastDelegate> delegate.
