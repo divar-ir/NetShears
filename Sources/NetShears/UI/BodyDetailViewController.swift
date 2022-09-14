@@ -9,6 +9,7 @@
 import UIKit
 
 final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
+
     @IBOutlet weak var bottomViewInputConstraint: NSLayoutConstraint!
     @IBOutlet weak var toolBar: UIToolbar!
     @IBOutlet weak var labelWordFinded: UILabel!
@@ -25,46 +26,63 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
     var data: Data?
     var indexOfWord: Int = 0
 
+    let jsonValidatorOnline = JSONValidatorOnline()
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(BodyDetailViewController.handleKeyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(BodyDetailViewController.handleKeyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 
-        textView.font = UIFont(name: "Courier", size: 14)
-        textView.dataDetectorTypes = UIDataDetectorTypes.link
-
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareContent(_:)))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(showSearch))
-        navigationItem.rightBarButtonItems = [searchButton, shareButton]
-
-        buttonPrevious.isEnabled = false
-        buttonNext.isEnabled = false
+        setupObservers()
+        setupTextView()
+        setupNavigationItems()
+        setupNextPreviousButtons()
         addSearchController()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setBody()
+    }
+
+    private func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(BodyDetailViewController.handleKeyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(BodyDetailViewController.handleKeyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    private func setupTextView() {
+        textView.font = UIFont(name: "Courier", size: 14)
+        textView.dataDetectorTypes = UIDataDetectorTypes.link
+        textView.textAlignment = .left
+    }
+
+    private func setupNavigationItems() {
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareContent(_:)))
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(showSearch))
+        navigationItem.rightBarButtonItems = [searchButton, shareButton]
+    }
+
+    private func setupNextPreviousButtons() {
+        buttonPrevious.isEnabled = false
+        buttonNext.isEnabled = false
+        guard UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft, var items = toolBar.items else {
+            return
+        }
+        items.reverse()
+        toolBar.items = items
+    }
+
+    private func setBody() {
         let hud = showLoader(view: view)
-        RequestExporter.body(data, bodyExportType: bodyExportType ?? .default) { [weak self] (stringData) in
+        RequestExporter.body(data, bodyExportType: bodyExportType) { [weak self] (stringData) in
             let formattedJSON = stringData
             DispatchQueue.main.async {
                 self?.textView.text = formattedJSON
                 self?.hideLoader(loaderView: hud)
             }
         }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 
     //  MARK: - Search
@@ -101,6 +119,10 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
             indexOfWord = 0
         }
         getCursor()
+    }
+
+    @IBAction func openValidatorTapped(_ sender: Any) {
+        jsonValidatorOnline.open(jsonString: textView.text, on: self)
     }
 
     func getCursor() {
