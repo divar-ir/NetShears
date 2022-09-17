@@ -9,6 +9,7 @@
 import UIKit
 
 final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
+
     @IBOutlet weak var bottomViewInputConstraint: NSLayoutConstraint!
     @IBOutlet weak var toolBar: UIToolbar!
     @IBOutlet weak var labelWordFinded: UILabel!
@@ -19,11 +20,29 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
     static let kPadding: CGFloat = 10.0
     
     var bodyExportType: BodyExportType = .default
-
+    var textColor: UIColor {
+        guard #available(iOS 13.0, *) else {
+            return .black
+        }
+        return UIColor(dynamicProvider: { trait in
+            switch trait.userInterfaceStyle {
+            case .light:
+                return .black
+            case .dark:
+                return .white
+            case .unspecified:
+                return .gray
+            @unknown default:
+                return .gray
+            }
+        })
+    }
     var searchController: UISearchController?
     var highlightedWords: [NSTextCheckingResult] = []
     var data: Data?
     var indexOfWord: Int = 0
+
+    let jsonValidatorOnline = JSONValidatorOnline()
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -31,40 +50,61 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(BodyDetailViewController.handleKeyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(BodyDetailViewController.handleKeyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 
-        textView.font = UIFont(name: "Courier", size: 14)
-        textView.dataDetectorTypes = UIDataDetectorTypes.link
-
-        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareContent(_:)))
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(showSearch))
-        navigationItem.rightBarButtonItems = [searchButton, shareButton]
-
-        buttonPrevious.isEnabled = false
-        buttonNext.isEnabled = false
+        setupObservers()
+        setupTextView()
+        setupNavigationItems()
+        setupNextPreviousButtons()
         addSearchController()
+        hideViewInValidatorButtonIfNeeded()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setBody()
+    }
+
+    private func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(BodyDetailViewController.handleKeyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(BodyDetailViewController.handleKeyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    private func setupTextView() {
+        textView.font = UIFont(name: "Courier", size: 14)
+        textView.dataDetectorTypes = UIDataDetectorTypes.link
+        setupAlignmentAndColor()
+    }
+
+    private func setupAlignmentAndColor() {
+        textView.textAlignment = .left
+        textView.textColor = textColor
+    }
+
+    private func setupNavigationItems() {
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareContent(_:)))
+        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(showSearch))
+        navigationItem.rightBarButtonItems = [searchButton, shareButton]
+    }
+
+    private func setupNextPreviousButtons() {
+        buttonPrevious.isEnabled = false
+        buttonNext.isEnabled = false
+        guard UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft, var items = toolBar.items else {
+            return
+        }
+        items.reverse()
+        toolBar.items = items
+    }
+
+    private func setBody() {
         let hud = showLoader(view: view)
-        RequestExporter.body(data, bodyExportType: bodyExportType ) { [weak self] (stringData) in
+        RequestExporter.body(data, bodyExportType: bodyExportType) { [weak self] stringData in
             let formattedJSON = stringData
             DispatchQueue.main.async {
                 self?.textView.text = formattedJSON
                 self?.hideLoader(loaderView: hud)
             }
         }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 
     //  MARK: - Search
@@ -87,6 +127,14 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
         definesPresentationContext = true
     }
 
+    func hideViewInValidatorButtonIfNeeded() {
+        if #available(iOS 11.0, *) {
+            return
+        }
+        let irRTL = view.semanticContentAttribute == .forceRightToLeft
+        _ = irRTL ? toolBar.items?.removeLast() : toolBar.items?.removeFirst()
+    }
+
     @IBAction func previousStep(_ sender: UIBarButtonItem?) {
         indexOfWord -= 1
         if indexOfWord < 0 {
@@ -103,6 +151,10 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
         getCursor()
     }
 
+    @IBAction func openValidatorTapped(_ sender: Any) {
+        jsonValidatorOnline.open(jsonString: textView.text, on: self)
+    }
+
     func getCursor() {
         let value = highlightedWords[indexOfWord]
         if let range = textView.convertRange(range: value.range) {
@@ -114,6 +166,7 @@ final class BodyDetailViewController: UIViewController, ShowLoaderProtocol {
                 textView.setContentOffset(CGPoint(x: 0, y: rect.origin.y - BodyDetailViewController.kPadding), animated: true)
             }
             cursorAnimation(with: value.range)
+            setupAlignmentAndColor()
         }
     }
 
@@ -192,7 +245,8 @@ extension BodyDetailViewController: UISearchBarDelegate {
 
 extension BodyDetailViewController {
     func resetSearchText() {
-        let attributedString = NSMutableAttributedString(attributedString: self.textView.attributedText)
+        let prettyString = textView.attributedText.string.prettyPrintedJSON ?? textView.attributedText.string
+        let attributedString = NSMutableAttributedString(string: prettyString)
             attributedString.addAttribute(.backgroundColor, value: UIColor.clear, range: NSRange(location: 0, length: self.textView.attributedText.length))
             attributedString.addAttribute(.font, value: UIFont(name: "Courier", size: 14)!, range: NSRange(location: 0, length: self.textView.attributedText.length))
 
@@ -200,6 +254,7 @@ extension BodyDetailViewController {
         self.labelWordFinded.text = "0 of 0"
         self.buttonPrevious.isEnabled = false
         self.buttonNext.isEnabled = false
+        setupAlignmentAndColor()
     }
 
     func cursorAnimation(with range: NSRange) {
