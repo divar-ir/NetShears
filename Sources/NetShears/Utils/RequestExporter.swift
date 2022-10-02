@@ -47,7 +47,7 @@ final class RequestExporter: NSObject {
     
     static func body(_ body: Data?, splitLength: Int? = nil, bodyExportType: BodyExportType) -> String {
         if case .custom(let text) = bodyExportType {
-            return text
+            return text.prettyPrintedJSON ?? text
         }
         
         guard body != nil else {
