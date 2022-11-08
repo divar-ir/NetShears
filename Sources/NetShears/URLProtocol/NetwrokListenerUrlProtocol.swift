@@ -72,8 +72,7 @@ class NetwrokListenerUrlProtocol: URLProtocol {
         /// The receiver will have either an HTTP body or an HTTP body stream only one may be set for a request.
         /// A HTTP body stream is preserved when copying an NSURLRequest object,
         /// but is lost when a request is archived using the NSCoding protocol.
-        //        return request.httpBody ?? request.httpBodyStream?.readfully()
-        return nil
+        return request.httpBody ?? request.getHttpBodyStreamData()
     }
     
     deinit {
