@@ -24,6 +24,7 @@ extension URLRequest {
                 data.append(&buffer, length: length)
             }
         }
+        httpBodyStream.close()
         return data as Data
     }
 }
