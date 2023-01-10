@@ -9,40 +9,49 @@
 import Foundation
 
 final class Storage: NSObject {
-
     static let shared: Storage = Storage()
-    
+    private let accessQueue = DispatchQueue(label: "com.netshears.queue", attributes: .concurrent)
+
     private(set) var requests: [NetShearsRequestModel] = []
 
     var filteredRequests: [NetShearsRequestModel] {
-        return getFilteredRequests()
+        getFilteredRequests()
     }
 
-    func saveRequest(request: NetShearsRequestModel?){
-        guard request != nil else {
-            return
+    func saveRequest(request: NetShearsRequestModel) {
+        accessQueue.async(flags: .barrier) { [weak self] in
+            guard let self else {
+                return
+            }
+            if let index = self.requests.firstIndex(where: { (req) -> Bool in
+                return request.id == req.id ? true : false
+            }) {
+                self.requests[index] = request
+            } else {
+                self.requests.insert(request, at: 0)
+            }
+            NotificationCenter.default.post(name: NSNotification.Name.NewRequestNotification, object: nil)
         }
-        
-        if let index = requests.firstIndex(where: { (req) -> Bool in
-            return request?.id == req.id ? true : false
-        }) {
-            requests[index] = request!
-        } else {
-            requests.insert(request!, at: 0)
-        }
-        NotificationCenter.default.post(name: NSNotification.Name.NewRequestNotification, object: nil)
     }
 
     func clearRequests() {
-        requests.removeAll()
+        accessQueue.async(flags: .barrier) { [weak self] in
+            self?.requests.removeAll()
+        }
     }
 
     private func getFilteredRequests() -> [NetShearsRequestModel] {
-        guard case Ignore.enabled(let ignoreHandler) = NetShears.shared.ignore else {
-            return requests
+        var filteredRequestes = [NetShearsRequestModel]()
+        accessQueue.sync {
+            guard case Ignore.enabled(let ignoreHandler) = NetShears.shared.ignore else {
+                filteredRequestes =  requests
+                return
+            }
+            filteredRequestes = requests.filter { ignoreHandler($0) == false }
+
         }
-        let filteredRequests = requests.filter { ignoreHandler($0) == false }
-        return filteredRequests
+        return filteredRequestes
+
     }
 
 }
