@@ -41,17 +41,18 @@ final class Storage: NSObject {
     }
 
     private func getFilteredRequests() -> [NetShearsRequestModel] {
-        var filteredRequestes = [NetShearsRequestModel]()
+        var localRequests = [NetShearsRequestModel]()
         accessQueue.sync {
-            guard case Ignore.enabled(let ignoreHandler) = NetShears.shared.ignore else {
-                filteredRequestes =  requests
-                return
-            }
-            filteredRequestes = requests.filter { ignoreHandler($0) == false }
-
+            localRequests =  requests
         }
-        return filteredRequestes
+        return Self.filterRequestsIfNeeded(localRequests)
+    }
 
+    private static func filterRequestsIfNeeded(_ requests: [NetShearsRequestModel]) -> [NetShearsRequestModel] {
+        guard case Ignore.enabled(let ignoreHandler) = NetShears.shared.ignore else {
+            return requests
+        }
+        return  requests.filter { ignoreHandler($0) == false }
     }
 
 }
