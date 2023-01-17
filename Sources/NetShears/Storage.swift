@@ -43,7 +43,7 @@ final class Storage: NSObject {
     private func getFilteredRequests() -> [NetShearsRequestModel] {
         var localRequests = [NetShearsRequestModel]()
         accessQueue.sync {
-            localRequests =  requests
+            localRequests = requests
         }
         return Self.filterRequestsIfNeeded(localRequests)
     }
