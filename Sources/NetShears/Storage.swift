@@ -20,7 +20,7 @@ final class Storage: NSObject {
 
     func saveRequest(request: NetShearsRequestModel) {
         accessQueue.async(flags: .barrier) { [weak self] in
-            guard let self else {
+            guard let self = self else {
                 return
             }
             if let index = self.requests.firstIndex(where: { (req) -> Bool in
