@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 public protocol BodyExporterDelegate: AnyObject {
     func netShears(exportResponseBodyFor request: NetShearsRequestModel) -> BodyExportType
@@ -89,6 +90,11 @@ public final class NetShears: NSObject {
             ((initialVC as? UINavigationController)?.topViewController as? RequestsViewController)?.delegate = bodyExportDelegate
             UIViewController.currentViewController()?.present(initialVC, animated: true, completion: nil)
         }
+    }
+    
+    @available(iOS 13.0, *)
+    public func view() -> some View {
+        NetshearsFlowView()
     }
 
     public func addGRPC(url: String,
