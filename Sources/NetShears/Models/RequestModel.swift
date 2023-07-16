@@ -99,18 +99,19 @@ public final class NetShearsRequestModel: Codable {
          success: Bool,
          statusCode: Int,
          duration: Double?,
-         HPACKHeadersRequest: [String: String]?,
-         HPACKHeadersResponse: [String: String]?,
+         scheme: String,
+         requestHeaders: [String: String]?,
+         responseHeaders: [String: String]?,
          isFinished: Bool = true) {
         self.id = UUID().uuidString
         self.method = method
-        self.scheme = "gRPC"
+        self.scheme = scheme
         self.url = url
         self.host = host
         self.httpBody = requestObject
         self.code = statusCode
-        self.responseHeaders = HPACKHeadersResponse
-        self.headers = HPACKHeadersRequest ?? [:]
+        self.responseHeaders = responseHeaders
+        self.headers = requestHeaders ?? [:]
         self.dataResponse = responseObject
         self.date = Date()
         self.port = nil

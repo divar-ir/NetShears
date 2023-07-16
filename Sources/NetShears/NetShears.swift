@@ -91,6 +91,39 @@ public final class NetShears: NSObject {
         }
     }
 
+    public func addCustomRequest(url: String,
+                                 host: String,
+                                 method: String,
+                                 requestObject: Data?,
+                                 responseObject: Data?,
+                                 success: Bool,
+                                 statusCode: Int,
+                                 statusMessage: String?,
+                                 duration: Double?,
+                                 scheme: String,
+                                 requestHeaders: [String: String]?,
+                                 responseHeaders: [String: String]?) {
+        let request = NetShearsRequestModel(url: url,
+                                            host: host,
+                                            method: method,
+                                            requestObject: requestObject,
+                                            responseObject: responseObject,
+                                            success: success,
+                                            statusCode: statusCode,
+                                            duration: duration,
+                                            scheme: scheme,
+                                            requestHeaders: requestHeaders,
+                                            responseHeaders: responseHeaders,
+                                            isFinished: true)
+        if loggerEnable {
+            RequestStorage.shared.newRequestArrived(request)
+        }
+
+        if listenerEnable {
+            RequestBroadcast.shared.newRequestArrived(request)
+        }
+    }
+
     public func addGRPC(url: String,
                         host: String,
                         method: String,
@@ -102,12 +135,6 @@ public final class NetShears: NSObject {
                         duration: Double?,
                         HPACKHeadersRequest: [String: String]?,
                         HPACKHeadersResponse: [String: String]?){
-        let request = NetShearsRequestModel(url: url, host: host, method: method, requestObject: requestObject, responseObject: responseObject, success: success, statusCode: statusCode, duration: duration, HPACKHeadersRequest: HPACKHeadersRequest, HPACKHeadersResponse: HPACKHeadersResponse, isFinished: true)
-        if loggerEnable {
-            RequestStorage.shared.newRequestArrived(request)
-        }
-        if listenerEnable {
-            RequestBroadcast.shared.newRequestArrived(request)
-        }
+       addCustomRequest(url: url, host: host, method: method, requestObject: requestObject, responseObject: responseObject, success: success, statusCode: statusCode, statusMessage: statusMessage, duration: duration, scheme: "gRPC", requestHeaders: HPACKHeadersRequest, responseHeaders: HPACKHeadersResponse)
     }
 }
