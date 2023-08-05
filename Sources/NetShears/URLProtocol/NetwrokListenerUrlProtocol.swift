@@ -137,6 +137,12 @@ extension NetwrokListenerUrlProtocol: URLSessionDataDelegate {
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         client?.urlProtocolDidFinishLoading(self)
     }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        if let url = task.currentRequest?.url {
+            NetShears.shared.taskProgressDelegate?.task(url, didRecieveProgress: task.progress)
+        }
+    }
 }
 
 

@@ -18,10 +18,16 @@ public extension BodyExporterDelegate {
     func netShears(exportRequestBodyFor request: NetShearsRequestModel) -> BodyExportType { .default }
 }
 
+public protocol TaskProgressDelegate: AnyObject {
+    func task(_ url: URL, didRecieveProgress progress: Progress)
+}
+
 public final class NetShears: NSObject {
     
     public static let shared = NetShears()
     public weak var bodyExportDelegate: BodyExporterDelegate?
+    public weak var taskProgressDelegate: TaskProgressDelegate?
+    
     internal var loggerEnable = false
     internal var interceptorEnable = false
     internal var listenerEnable = false
