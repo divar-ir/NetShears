@@ -14,25 +14,25 @@ public protocol RequestBroadcastDelegate: AnyObject {
 public final class RequestBroadcast: RequestObserverProtocol {
     static public let shared = RequestBroadcast()
 
-    var delegate = ThreadSafe<RequestBroadcastDelegate?>(nil)
+    private var delegates = ThreadSafe<NSHashTable<AnyObject>>(.weakObjects())
 
     private init() {}
 
-    public func setDelegate(_ newDelegate: RequestBroadcastDelegate) {
-        delegate.atomically { delegate in
-            delegate = newDelegate
+    public func addDelegate(_ newDelegate: RequestBroadcastDelegate) {
+        delegates.atomically { delegates in
+            delegates.add(newDelegate)
         }
     }
 
-    public func removeDelegate() {
-        delegate.atomically { delegate in
-            delegate = nil
+    public func removeDelegate(_ delegateToRemove: RequestBroadcastDelegate) {
+        delegates.atomically { delegates in
+            delegates.remove(delegateToRemove)
         }
     }
 
     func newRequestArrived(_ request: NetShearsRequestModel) {
-        delegate.atomically { delegate in
-            delegate?.newRequestArrived(request)
+        delegates.atomically { delegates in
+            delegates.allObjects.reversed().forEach { ($0 as! RequestBroadcastDelegate).newRequestArrived(request) }
         }
     }
 }
