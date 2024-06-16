@@ -15,8 +15,8 @@ class NetwrokListenerUrlProtocol: URLProtocol {
     }
     
     var session: URLSession?
-    var sessionTasks: ThreadSafeDictionary<String, URLSessionDataTask>?
-    var currentRequests: ThreadSafeDictionary<String, NetShearsRequestModel>?
+    var sessionTasks: ThreadSafeDictionary<String, URLSessionDataTask>? = .init()
+    var currentRequests: ThreadSafeDictionary<String, NetShearsRequestModel>? = .init()
 
     lazy var requestObserver: RequestObserverProtocol = {
         RequestObserver(options: [
@@ -86,8 +86,8 @@ class NetwrokListenerUrlProtocol: URLProtocol {
     
     deinit {
         session = nil
-        sessionTasks = nil
-        currentRequests = nil
+        sessionTasks = .init()
+        currentRequests = .init()
     }
 }
 
