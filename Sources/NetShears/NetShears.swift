@@ -131,9 +131,7 @@ public final class NetShears: NSObject {
             RequestStorage.shared.newRequestArrived(request)
         }
 
-        if listenerEnable {
-            RequestBroadcast.shared.newRequestArrived(request)
-        }
+        RequestBroadcast.shared.newRequestArrived(request)
     }
 
     public func addGRPC(url: String,
