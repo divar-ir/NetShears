@@ -20,12 +20,17 @@ NetShears adds a Request interceptor mechanisms to be able to modify the HTTP/HT
 
 NetShears has three main functionality :
 
-1 - Request interceptor mechanisms to be able to modify the HTTP/HTTPS Request before being sent.
+1 - Network request observer which can be used to observe every HTTP/HTTPS request using delegation.
+```swift
+Netshears.shared.startListener() 
+```
+
+2 - Request interceptor mechanisms to be able to modify the HTTP/HTTPS Request before being sent.
 ```swift
 Netshears.shared.startInterceptor() 
 ```
 
-2 - Show network traffics.
+3 - Show network traffics.
 ```swift
 Netshears.shared.startLogger() 
 ```
@@ -130,6 +135,16 @@ NetShears.shared.ignore = .enabled(ignoreHandler: { request in
 ```
 Note that requests will be ignored **just** in Traffic Monitoring View; so you can set another ```ignoreHandler``` and get different results.
 By default ```NetShears.ignore``` is ```.disabled```.
+
+# Request Observer
+
+For observing requests you need to first call startListener then just simply adopt RequestBroadcast <RequestBroadcastDelegate> delegate.
+```swift
+NetShears.shared.startListener()
+
+RequestBroadcast.shared.setDelegate(self)
+
+```
 
 ## Installation
 

@@ -30,6 +30,7 @@ public final class NetShears: NSObject {
     
     internal var loggerEnable = false
     internal var interceptorEnable = false
+    internal var listenerEnable = false
     internal var swizzled = false
     let networkRequestInterceptor = NetworkRequestInterceptor()
 
@@ -63,6 +64,16 @@ public final class NetShears: NSObject {
 
     public func stopLogger() {
         self.networkRequestInterceptor.stopLogger()
+        checkSwizzling()
+    }
+
+    public func startListener() {
+        self.networkRequestInterceptor.startListener()
+        checkSwizzling()
+    }
+
+    public func stopListener() {
+        self.networkRequestInterceptor.stopListener()
         checkSwizzling()
     }
     
@@ -120,7 +131,9 @@ public final class NetShears: NSObject {
             RequestStorage.shared.newRequestArrived(request)
         }
 
-        RequestBroadcast.shared.newRequestArrived(request)
+        if listenerEnable {
+            RequestBroadcast.shared.newRequestArrived(request)
+        }
     }
 
     public func addGRPC(url: String,

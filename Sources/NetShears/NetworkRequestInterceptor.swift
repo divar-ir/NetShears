@@ -38,6 +38,16 @@ import Foundation
         NetShears.shared.loggerEnable = false
         URLProtocol.unregisterClass(NetworkLoggerUrlProtocol.self)
     }
+
+    func startListener() {
+        NetShears.shared.listenerEnable = true
+        URLProtocol.registerClass(NetwrokListenerUrlProtocol.self)
+    }
+
+    func stopListener() {
+        NetShears.shared.listenerEnable = false
+        URLProtocol.unregisterClass(NetwrokListenerUrlProtocol.self)
+    }
 }
 
 
