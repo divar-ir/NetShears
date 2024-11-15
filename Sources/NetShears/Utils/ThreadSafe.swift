@@ -24,3 +24,21 @@ final class ThreadSafe<A> {
         }
     }
 }
+
+final class ThreadSafeDictionary<K: Hashable, V> {
+    private var dictionary: [K: V] = [:]
+    private var queue = DispatchQueue(label: UUID().uuidString, attributes: .concurrent)
+
+    final subscript(_ key: K) -> V? {
+        get {
+            queue.sync {
+                dictionary[key]
+            }
+        }
+        set(value) {
+            queue.sync(flags: .barrier) {
+                dictionary[key] = value
+            }
+        }
+    }
+}
