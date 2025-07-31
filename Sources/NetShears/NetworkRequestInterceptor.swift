@@ -14,7 +14,7 @@ import Foundation
         let uRLSessionConfigurationClass: AnyClass = object_getClass(instance)!
         
         let method1: Method = class_getInstanceMethod(uRLSessionConfigurationClass, #selector(getter: uRLSessionConfigurationClass.protocolClasses))!
-        let method2: Method = class_getInstanceMethod(URLSessionConfiguration.self, #selector(URLSessionConfiguration.fakeProcotolClasses))!
+        let method2: Method = class_getInstanceMethod(URLSessionConfiguration.self, #selector(URLSessionConfiguration.fakeProtocolClasses))!
         
         method_exchangeImplementations(method1, method2)
     }

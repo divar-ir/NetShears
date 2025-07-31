@@ -9,11 +9,11 @@ import Foundation
 
 extension URLSessionConfiguration {
     
-    @objc func fakeProcotolClasses() -> [AnyClass]? {
-        guard let fakeProcotolClasses = self.fakeProcotolClasses() else {
+    @objc func fakeProtocolClasses() -> [AnyClass]? {
+        guard let fakeProtocolClasses = self.fakeProtocolClasses() else {
             return []
         }
-        var originalProtocolClasses = fakeProcotolClasses.filter {
+        var originalProtocolClasses = fakeProtocolClasses.filter {
             return $0 != NetworkInterceptorUrlProtocol.self && $0 != NetworkLoggerUrlProtocol.self && $0 != NetwrokListenerUrlProtocol.self
         }
         if NetShears.shared.loggerEnable {
