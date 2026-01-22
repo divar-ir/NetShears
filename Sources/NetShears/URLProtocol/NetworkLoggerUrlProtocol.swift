@@ -124,7 +124,7 @@ extension NetworkLoggerUrlProtocol: URLSessionDataDelegate {
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         let protectionSpace = challenge.protectionSpace
         let sender = challenge.sender
-        
+
         if protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
             if let serverTrust = protectionSpace.serverTrust {
                 let credential = URLCredential(trust: serverTrust)
@@ -133,6 +133,9 @@ extension NetworkLoggerUrlProtocol: URLSessionDataDelegate {
                 return
             }
         }
+
+        sender?.performDefaultHandling?(for: challenge)
+        completionHandler(.performDefaultHandling, nil)
     }
     
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
