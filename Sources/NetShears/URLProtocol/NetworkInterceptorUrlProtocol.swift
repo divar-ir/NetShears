@@ -106,17 +106,13 @@ extension NetworkInterceptorUrlProtocol: URLSessionDataDelegate {
     }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        let protectionSpace = challenge.protectionSpace
-        let sender = challenge.sender
-        
-        if protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            if let serverTrust = protectionSpace.serverTrust {
-                let credential = URLCredential(trust: serverTrust)
-                sender?.use(credential, for: challenge)
-                completionHandler(.useCredential, credential)
-                return
-            }
+        let (disposition, credential) = ServerTrustValidator.shared.respond(to: challenge)
+
+        if disposition == .useCredential, let credential {
+            challenge.sender?.use(credential, for: challenge)
         }
+
+        completionHandler(disposition, credential)
     }
     
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {

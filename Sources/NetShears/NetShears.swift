@@ -36,6 +36,16 @@ public final class NetShears: NSObject {
 
     public var ignore: Ignore = .disbaled
 
+    /// Decides whether to trust a server whose request NetShears intercepted.
+    ///
+    /// NetShears re-issues intercepted requests on its own `URLSession`, so the host
+    /// app's trust configuration never sees those handshakes. Install an evaluator here
+    /// to put it back in play. Leaving this `nil` means genuine system evaluation.
+    public var serverTrustEvaluator: ServerTrustEvaluating? {
+        get { ServerTrustValidator.shared.evaluator }
+        set { ServerTrustValidator.shared.evaluator = newValue }
+    }
+
     lazy var config: NetworkInterceptorConfig = {
         var savedModifiers = [Modifier]().retrieveFromDisk()
         return NetworkInterceptorConfig(modifiers: savedModifiers)
